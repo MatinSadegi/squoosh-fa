@@ -166,7 +166,7 @@ export class Options extends Component<Props, State> {
             value={determineLosslessQuality(options.quality, options.method)}
             onInput={this.onChange}
           >
-            Effort:
+            میزان تلاش برای فشرده‌سازی:
           </Range>
         </div>
         <div class={style.optionOneCell}>
@@ -177,11 +177,11 @@ export class Options extends Component<Props, State> {
             value={'' + (100 - options.near_lossless)}
             onInput={this.onChange}
           >
-            Slight loss:
+            افت کیفیت بسیار کم
           </Range>
         </div>
         <label class={style.optionToggle}>
-          Discrete tone image
+          تصویر با تُن مجزا
           {/*
             Although there are 3 different kinds of image hint, webp only
             seems to do something with the 'graph' type, and I don't really
@@ -210,7 +210,7 @@ export class Options extends Component<Props, State> {
             value={options.method}
             onInput={this.onChange}
           >
-            Effort:
+            میزان تلاش برای فشرده‌سازی:
           </Range>
         </div>
         <div class={style.optionOneCell}>
@@ -222,7 +222,7 @@ export class Options extends Component<Props, State> {
             value={options.quality}
             onInput={this.onChange}
           >
-            Quality:
+            کیفیت:
           </Range>
         </div>
         <label class={style.optionReveal}>
@@ -230,13 +230,13 @@ export class Options extends Component<Props, State> {
             checked={showAdvanced}
             onChange={linkState(this, 'showAdvanced')}
           />
-          Advanced settings
+          تنظیمات پیشرفته
         </label>
         <Expander>
           {showAdvanced ? (
             <div>
               <label class={style.optionToggle}>
-                Compress alpha
+                فشرده‌سازی کانال آلفا
                 <Checkbox
                   name="alpha_compression"
                   checked={!!options.alpha_compression}
@@ -251,7 +251,7 @@ export class Options extends Component<Props, State> {
                   value={options.alpha_quality}
                   onInput={this.onChange}
                 >
-                  Alpha quality:
+                  کیفیت آلفا:
                 </Range>
               </div>
               <div class={style.optionOneCell}>
@@ -262,11 +262,11 @@ export class Options extends Component<Props, State> {
                   value={options.alpha_filtering}
                   onInput={this.onChange}
                 >
-                  Alpha filter quality:
+                  کیفیت فیلتر آلفا:
                 </Range>
               </div>
               <label class={style.optionToggle}>
-                Auto adjust filter strength
+                تنظیم خودکار قدرت فیلتر
                 <Checkbox
                   name="autofilter"
                   checked={!!options.autofilter}
@@ -283,13 +283,13 @@ export class Options extends Component<Props, State> {
                       value={options.filter_strength}
                       onInput={this.onChange}
                     >
-                      Filter strength:
+                      قدرت فیلتر:
                     </Range>
                   </div>
                 )}
               </Expander>
               <label class={style.optionToggle}>
-                Strong filter
+                فیلتر قوی
                 <Checkbox
                   name="filter_type"
                   checked={!!options.filter_type}
@@ -304,11 +304,11 @@ export class Options extends Component<Props, State> {
                   value={7 - options.filter_sharpness}
                   onInput={this.onChange}
                 >
-                  Filter sharpness:
+                  وضوح فیلتر:
                 </Range>
               </div>
               <label class={style.optionToggle}>
-                Sharp RGB→YUV conversion
+                تبدیل دقیق‌تر RGB→YUV
                 <Checkbox
                   name="use_sharp_yuv"
                   checked={!!options.use_sharp_yuv}
@@ -323,7 +323,7 @@ export class Options extends Component<Props, State> {
                   value={options.pass}
                   onInput={this.onChange}
                 >
-                  Passes:
+                  تعداد عبورها:
                 </Range>
               </div>
               <div class={style.optionOneCell}>
@@ -334,19 +334,19 @@ export class Options extends Component<Props, State> {
                   value={options.sns_strength}
                   onInput={this.onChange}
                 >
-                  Spatial noise shaping:
+                  شکل‌دهی نویز فضایی:
                 </Range>
               </div>
               <label class={style.optionTextFirst}>
-                Preprocess:
+                پیش‌پردازش:
                 <Select
                   name="preprocessing"
                   value={options.preprocessing}
                   onChange={this.onChange}
                 >
-                  <option value="0">None</option>
-                  <option value="1">Segment smooth</option>
-                  <option value="2">Pseudo-random dithering</option>
+                  <option value="0">هیچ‌کدام</option>
+                  <option value="1">صاف‌سازی بخش‌ها</option>
+                  <option value="2">دترینگ شبه تصادفی</option>
                 </Select>
               </label>
               <div class={style.optionOneCell}>
@@ -357,7 +357,7 @@ export class Options extends Component<Props, State> {
                   value={options.segments}
                   onInput={this.onChange}
                 >
-                  Segments:
+                  تعداد بخش‌ها:
                 </Range>
               </div>
               <div class={style.optionOneCell}>
@@ -368,7 +368,7 @@ export class Options extends Component<Props, State> {
                   value={options.partitions}
                   onInput={this.onChange}
                 >
-                  Partitions:
+                  تعداد پارتیشن‌ها:
                 </Range>
               </div>
             </div>
@@ -384,7 +384,7 @@ export class Options extends Component<Props, State> {
     return (
       <form class={style.optionsSection} onSubmit={preventDefault}>
         <label class={style.optionToggle}>
-          Lossless
+          بدون افت کیفیت
           <Checkbox
             name="lossless"
             checked={!!options.lossless}
@@ -395,7 +395,7 @@ export class Options extends Component<Props, State> {
           ? this._losslessSpecificOptions(options)
           : this._lossySpecificOptions(options)}
         <label class={style.optionToggle}>
-          Preserve transparent data
+          حفظ داده‌های شفاف
           <Checkbox
             name="exact"
             checked={!!options.exact}

@@ -53,13 +53,13 @@ export class Options extends Component<Props, State> {
         <Expander>
           {extendedSettings ? (
             <label class={style.optionTextFirst}>
-              Type:
+              نوع:
               <Select
                 name="zx"
                 value={'' + options.zx}
                 onChange={this.onChange}
               >
-                <option value="0">Standard</option>
+                <option value="0">استاندارد</option>
                 <option value="1">ZX</option>
               </Select>
             </label>
@@ -75,7 +75,7 @@ export class Options extends Component<Props, State> {
                 value={options.maxNumColors}
                 onInput={this.onChange}
               >
-                Colors:
+                رنگ‌ها
               </Range>
             </div>
           )}
@@ -89,7 +89,7 @@ export class Options extends Component<Props, State> {
             value={options.dither}
             onInput={this.onChange}
           >
-            Dithering:
+            دیترینگ:
           </Range>
         </div>
       </form>

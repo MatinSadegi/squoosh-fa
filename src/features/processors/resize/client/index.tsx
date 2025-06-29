@@ -232,35 +232,35 @@ export class Options extends Component<Props, State> {
         onSubmit={preventDefault}
       >
         <label class={style.optionTextFirst}>
-          Method:
+          روش:
           <Select
             name="resizeMethod"
             value={options.method}
             onChange={this.onChange}
           >
-            {isVector && <option value="vector">Vector</option>}
+            {isVector && <option value="vector">وکتور</option>}
             <option value="lanczos3">Lanczos3</option>
             <option value="mitchell">Mitchell</option>
             <option value="catrom">Catmull-Rom</option>
             <option value="triangle">Triangle (bilinear)</option>
-            <option value="hqx">hqx (pixel art)</option>
-            <option value="browser-pixelated">Browser pixelated</option>
-            <option value="browser-low">Browser low quality</option>
-            <option value="browser-medium">Browser medium quality</option>
-            <option value="browser-high">Browser high quality</option>
+            <option value="hqx">hqx (پیکسل آرت)</option>
+            <option value="browser-pixelated">مرورگر pixelated</option>
+            <option value="browser-low">مرورگر کیفیت پایین</option>
+            <option value="browser-medium">مرورگر کیفیت متوسط</option>
+            <option value="browser-high">مرورگر کیفیت بالا</option>
           </Select>
         </label>
         <label class={style.optionTextFirst}>
-          Preset:
+          پیش‌فرض
           <Select value={this.getPreset()} onChange={this.onPresetChange}>
             {sizePresets.map((preset) => (
               <option value={preset}>{preset * 100}%</option>
             ))}
-            <option value="custom">Custom</option>
+            <option value="custom">سفارشی</option>
           </Select>
         </label>
         <label class={style.optionTextFirst}>
-          Width:
+          عرض:
           <input
             required
             class={style.textField}
@@ -272,7 +272,7 @@ export class Options extends Component<Props, State> {
           />
         </label>
         <label class={style.optionTextFirst}>
-          Height:
+          ارتفاع:
           <input
             required
             class={style.textField}
@@ -286,7 +286,7 @@ export class Options extends Component<Props, State> {
         <Expander>
           {isWorkerOptions(options) ? (
             <label class={style.optionToggle}>
-              Premultiply alpha channel
+              پیش‌ضرب آلفا
               <Checkbox
                 name="premultiply"
                 checked={options.premultiply}
@@ -306,7 +306,7 @@ export class Options extends Component<Props, State> {
           ) : null}
         </Expander>
         <label class={style.optionToggle}>
-          Maintain aspect ratio
+          حفظ نسبت تصویر
           <Checkbox
             name="maintainAspect"
             checked={maintainAspect}
@@ -316,7 +316,7 @@ export class Options extends Component<Props, State> {
         <Expander>
           {maintainAspect ? null : (
             <label class={style.optionTextFirst}>
-              Fit method:
+              روش جای‌گذاری:
               <Select
                 name="fitMethod"
                 value={options.fitMethod}

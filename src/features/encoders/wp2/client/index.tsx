@@ -156,7 +156,7 @@ export class Options extends Component<Props, State> {
     return (
       <form class={style.optionsSection} onSubmit={preventDefault}>
         <label class={style.optionToggle}>
-          Lossless
+          بدون افت کیفیت
           <Checkbox
             checked={lossless}
             onChange={this._inputChange('lossless', 'boolean')}
@@ -172,7 +172,7 @@ export class Options extends Component<Props, State> {
                 value={slightLoss}
                 onInput={this._inputChange('slightLoss', 'number')}
               >
-                Slight loss:
+                افت کیفیت بسیار کم:
               </Range>
             </div>
           )}
@@ -188,11 +188,11 @@ export class Options extends Component<Props, State> {
                   value={quality}
                   onInput={this._inputChange('quality', 'number')}
                 >
-                  Quality:
+                  کیفیت:
                 </Range>
               </div>
               <label class={style.optionToggle}>
-                Separate alpha quality
+                کیفیت مجزای آلفا
                 <Checkbox
                   checked={separateAlpha}
                   onChange={this._inputChange('separateAlpha', 'boolean')}
@@ -208,7 +208,7 @@ export class Options extends Component<Props, State> {
                       value={alphaQuality}
                       onInput={this._inputChange('alphaQuality', 'number')}
                     >
-                      Alpha Quality:
+                      کیفیت آلفا:
                     </Range>
                   </div>
                 )}
@@ -218,7 +218,7 @@ export class Options extends Component<Props, State> {
                   checked={showAdvanced}
                   onChange={linkState(this, 'showAdvanced')}
                 />
-                Advanced settings
+                تنظیمات پیشرفته
               </label>
               <Expander>
                 {showAdvanced && (
@@ -231,7 +231,7 @@ export class Options extends Component<Props, State> {
                         value={passes}
                         onInput={this._inputChange('passes', 'number')}
                       >
-                        Passes:
+                        تعداد عبورها:
                       </Range>
                     </div>
                     <div class={style.optionOneCell}>
@@ -242,7 +242,7 @@ export class Options extends Component<Props, State> {
                         value={sns}
                         onInput={this._inputChange('sns', 'number')}
                       >
-                        Spatial noise shaping:
+                        شکل‌دهی نویز فضایی:
                       </Range>
                     </div>
                     <div class={style.optionOneCell}>
@@ -253,11 +253,11 @@ export class Options extends Component<Props, State> {
                         value={errorDiffusion}
                         onInput={this._inputChange('errorDiffusion', 'number')}
                       >
-                        Error diffusion:
+                        پخش خطا:
                       </Range>
                     </div>
                     <label class={style.optionTextFirst}>
-                      Subsample chroma:
+                      زیرنمونه‌برداری کروما:
                       <Select
                         value={uvMode}
                         onInput={this._inputChange('uvMode', 'number')}
@@ -269,7 +269,7 @@ export class Options extends Component<Props, State> {
                       </Select>
                     </label>
                     <label class={style.optionTextFirst}>
-                      Color space:
+                      فضای رنگ:
                       <Select
                         value={colorSpace}
                         onInput={this._inputChange('colorSpace', 'number')}
@@ -280,7 +280,7 @@ export class Options extends Component<Props, State> {
                       </Select>
                     </label>
                     <label class={style.optionToggle}>
-                      Random matrix
+                      ماتریس تصادفی
                       <Checkbox
                         checked={useRandomMatrix}
                         onChange={this._inputChange(
@@ -303,7 +303,7 @@ export class Options extends Component<Props, State> {
             value={effort}
             onInput={this._inputChange('effort', 'number')}
           >
-            Effort:
+            میزان تلاش برای فشرده‌سازی:
           </Range>
         </div>
       </form>

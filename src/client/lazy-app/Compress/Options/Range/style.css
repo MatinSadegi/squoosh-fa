@@ -18,13 +18,13 @@
 
 .range-wc {
   width: 100%;
+  direction: ltr;
 }
 
 .text-input {
   grid-row: 1 / 2;
   grid-column: 2 / 3;
-
-  text-align: right;
+  text-align: left;
   background: transparent;
   color: inherit;
   font: inherit;
@@ -37,7 +37,7 @@
   text-underline-position: under;
   width: 54px;
   position: relative;
-  left: 5px;
+  right: 5px;
 
   &:focus {
     background: #fff;

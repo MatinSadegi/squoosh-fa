@@ -114,7 +114,7 @@ export class Options extends Component<Props, State> {
             value={options.quality}
             onInput={this.onChange}
           >
-            Quality:
+            کیفیت
           </Range>
         </div>
         <label class={style.optionReveal}>
@@ -122,19 +122,21 @@ export class Options extends Component<Props, State> {
             checked={showAdvanced}
             onChange={linkState(this, 'showAdvanced')}
           />
-          Advanced settings
+          تنظیمات پیشرفته
         </label>
         <Expander>
           {showAdvanced ? (
             <div>
               <label class={style.optionTextFirst}>
-                Channels:
+                کانال‌ها:
                 <Select
                   name="color_space"
                   value={options.color_space}
                   onChange={this.onChange}
                 >
-                  <option value={MozJpegColorSpace.GRAYSCALE}>Grayscale</option>
+                  <option value={MozJpegColorSpace.GRAYSCALE}>
+                    سیاه‌و‌سفید
+                  </option>
                   <option value={MozJpegColorSpace.RGB}>RGB</option>
                   <option value={MozJpegColorSpace.YCbCr}>YCbCr</option>
                 </Select>
@@ -143,7 +145,7 @@ export class Options extends Component<Props, State> {
                 {options.color_space === MozJpegColorSpace.YCbCr ? (
                   <div>
                     <label class={style.optionToggle}>
-                      Auto subsample chroma
+                      نمونه‌برداری خودکار کرومینانس
                       <Checkbox
                         name="auto_subsample"
                         checked={options.auto_subsample}
@@ -160,13 +162,13 @@ export class Options extends Component<Props, State> {
                             value={options.chroma_subsample}
                             onInput={this.onChange}
                           >
-                            Subsample chroma by:
+                            ضریب نمونه‌برداری کرومینانس:
                           </Range>
                         </div>
                       )}
                     </Expander>
                     <label class={style.optionToggle}>
-                      Separate chroma quality
+                      کیفیت جداگانه کرومینانس
                       <Checkbox
                         name="separate_chroma_quality"
                         checked={options.separate_chroma_quality}
@@ -183,7 +185,7 @@ export class Options extends Component<Props, State> {
                             value={options.chroma_quality}
                             onInput={this.onChange}
                           >
-                            Chroma quality:
+                            کیفیت کرومینانس:
                           </Range>
                         </div>
                       ) : null}
@@ -192,7 +194,7 @@ export class Options extends Component<Props, State> {
                 ) : null}
               </Expander>
               <label class={style.optionToggle}>
-                Pointless spec compliance
+                سازگاری بی‌فایده با استاندارد
                 <Checkbox
                   name="baseline"
                   checked={options.baseline}
@@ -202,7 +204,7 @@ export class Options extends Component<Props, State> {
               <Expander>
                 {options.baseline ? null : (
                   <label class={style.optionToggle}>
-                    Progressive rendering
+                    رندر تدریجی
                     <Checkbox
                       name="progressive"
                       checked={options.progressive}
@@ -214,7 +216,7 @@ export class Options extends Component<Props, State> {
               <Expander>
                 {options.baseline ? (
                   <label class={style.optionToggle}>
-                    Optimize Huffman table
+                    بهینه‌سازی جدول هافمن
                     <Checkbox
                       name="optimize_coding"
                       checked={options.optimize_coding}
@@ -231,11 +233,11 @@ export class Options extends Component<Props, State> {
                   value={options.smoothing}
                   onInput={this.onChange}
                 >
-                  Smoothing:
+                  میزان صاف‌سازی:
                 </Range>
               </div>
               <label class={style.optionTextFirst}>
-                Quantization:
+                جداول کوانتیزاسیون:
                 <Select
                   name="quant_table"
                   value={options.quant_table}
@@ -253,7 +255,7 @@ export class Options extends Component<Props, State> {
                 </Select>
               </label>
               <label class={style.optionToggle}>
-                Trellis multipass
+                Trellis چند‌مرحله‌ای
                 <Checkbox
                   name="trellis_multipass"
                   checked={options.trellis_multipass}
@@ -263,7 +265,7 @@ export class Options extends Component<Props, State> {
               <Expander>
                 {options.trellis_multipass ? (
                   <label class={style.optionToggle}>
-                    Optimize zero block runs
+                    بهینه‌سازی بلوک‌های صفر
                     <Checkbox
                       name="trellis_opt_zero"
                       checked={options.trellis_opt_zero}
@@ -273,7 +275,7 @@ export class Options extends Component<Props, State> {
                 ) : null}
               </Expander>
               <label class={style.optionToggle}>
-                Optimize after trellis quantization
+                بهینه‌سازی پس از کوانتیزاسیون Trellis
                 <Checkbox
                   name="trellis_opt_table"
                   checked={options.trellis_opt_table}
@@ -288,7 +290,7 @@ export class Options extends Component<Props, State> {
                   value={options.trellis_loops}
                   onInput={this.onChange}
                 >
-                  Trellis quantization passes:
+                  تعداد دفعات عبور Trellis:
                 </Range>
               </div>
             </div>

@@ -21,7 +21,7 @@
   height: var(--thumb-size);
   background: var(--less-light-gray);
   border-radius: 100%;
-  transform: translateX(calc(var(--thumb-size) / -2));
+  transform: translateX(calc(var(--thumb-size) / 2));
   overflow: hidden;
 
   &::before {
@@ -49,7 +49,7 @@
 
   &:checked + .track {
     .thumb-track {
-      transform: translateX(100%);
+      transform: translateX(-100%);
     }
 
     .thumb::before {

@@ -168,17 +168,17 @@ export default class Options extends Component<Props, State> {
             <div>
               <h3 class={style.optionsTitle}>
                 <div class={style.titleAndButtons}>
-                  Edit
+                  ویرایش
                   <button
                     class={style.copyOverButton}
-                    title="Copy settings to other side"
+                    title="کپی تنظیمات به سمت دیگر"
                     onClick={this.onCopyToOtherSideClick}
                   >
                     <SwapIcon />
                   </button>
                   <button
                     class={style.saveButton}
-                    title="Save side settings"
+                    title="ذخیره تنظیمات این سمت"
                     onClick={this.onSaveSideSettingClick}
                   >
                     <SaveIcon />
@@ -195,7 +195,7 @@ export default class Options extends Component<Props, State> {
                         ? style.buttonOpacity
                         : '')
                     }
-                    title="Import saved side settings"
+                    title="بارگذاری تنظیمات ذخیره شده"
                     onClick={this.onImportSideSettingsClick}
                     disabled={
                       // Disabled if this side's settings haven't been saved
@@ -209,7 +209,7 @@ export default class Options extends Component<Props, State> {
                 </div>
               </h3>
               <label class={style.sectionEnabler}>
-                Resize
+                تغییر اندازه تصویر
                 <Toggle
                   name="resize.enable"
                   checked={!!processorState.resize.enabled}
@@ -229,7 +229,7 @@ export default class Options extends Component<Props, State> {
               </Expander>
 
               <label class={style.sectionEnabler}>
-                Reduce palette
+                کاهش تعداد رنگ‌ها
                 <Toggle
                   name="quantize.enable"
                   checked={!!processorState.quantize.enabled}
@@ -248,7 +248,7 @@ export default class Options extends Component<Props, State> {
           )}
         </Expander>
 
-        <h3 class={style.optionsTitle}>Compress</h3>
+        <h3 class={style.optionsTitle}>فشرده‌سازی</h3>
 
         <section class={`${style.optionOneCell} ${style.optionsSection}`}>
           {supportedEncoderMap ? (
@@ -257,7 +257,7 @@ export default class Options extends Component<Props, State> {
               onChange={this.onEncoderTypeChange}
               large
             >
-              <option value="identity">{`Original Image ${
+              <option value="identity">{`تصویر اصلی ${
                 this.props.source ? `(${this.props.source.file.name})` : ''
               }`}</option>
               {Object.entries(supportedEncoderMap).map(([type, encoder]) => (
@@ -266,7 +266,7 @@ export default class Options extends Component<Props, State> {
             </Select>
           ) : (
             <Select large>
-              <option>Loading…</option>
+              <option>در حال بارگذاری ...</option>
             </Select>
           )}
         </section>

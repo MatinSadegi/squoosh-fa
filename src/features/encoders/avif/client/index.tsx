@@ -176,7 +176,7 @@ export class Options extends Component<Props, State> {
     return (
       <form class={style.optionsSection} onSubmit={preventDefault}>
         <label class={style.optionToggle}>
-          Lossless
+          فشرده‌سازی بدون افت کیفیت
           <Checkbox
             checked={lossless}
             onChange={this._inputChange('lossless', 'boolean')}
@@ -191,7 +191,7 @@ export class Options extends Component<Props, State> {
                 value={quality}
                 onInput={this._inputChange('quality', 'number')}
               >
-                Quality:
+                کیفیت:
               </Range>
             </div>
           )}
@@ -201,7 +201,7 @@ export class Options extends Component<Props, State> {
             checked={showAdvanced}
             onChange={linkState(this, 'showAdvanced')}
           />
-          Advanced settings
+          تنظیمات پیشرفته
         </label>
         <Expander>
           {showAdvanced && (
@@ -210,7 +210,7 @@ export class Options extends Component<Props, State> {
                 {!lossless && (
                   <div>
                     <label class={style.optionTextFirst}>
-                      Subsample chroma:
+                      زیرنمونه‌گیری رنگ:
                       <Select
                         value={subsample}
                         onChange={this._inputChange('subsample', 'number')}
@@ -224,7 +224,7 @@ export class Options extends Component<Props, State> {
                     <Expander>
                       {subsample === 1 && (
                         <label class={style.optionToggle}>
-                          Sharp YUV Downsampling
+                          نمونه‌گیری YUV تیز
                           <Checkbox
                             checked={enableSharpYUV}
                             onChange={this._inputChange(
@@ -236,7 +236,7 @@ export class Options extends Component<Props, State> {
                       )}
                     </Expander>
                     <label class={style.optionToggle}>
-                      Separate alpha quality
+                      کیفیت آلفای جداگانه
                       <Checkbox
                         checked={separateAlpha}
                         onChange={this._inputChange('separateAlpha', 'boolean')}
@@ -254,13 +254,13 @@ export class Options extends Component<Props, State> {
                               'number',
                             )}
                           >
-                            Alpha quality:
+                            کیفیت آلفا:
                           </Range>
                         </div>
                       )}
                     </Expander>
                     <label class={style.optionToggle}>
-                      Extra chroma compression
+                      فشرده‌سازی بیشتر رنگ
                       <Checkbox
                         checked={chromaDeltaQ}
                         onChange={this._inputChange('chromaDeltaQ', 'boolean')}
@@ -273,7 +273,7 @@ export class Options extends Component<Props, State> {
                         value={sharpness}
                         onInput={this._inputChange('sharpness', 'number')}
                       >
-                        Sharpness:
+                        وضوح:
                       </Range>
                     </div>
                     <div class={style.optionOneCell}>
@@ -283,16 +283,16 @@ export class Options extends Component<Props, State> {
                         value={denoiseLevel}
                         onInput={this._inputChange('denoiseLevel', 'number')}
                       >
-                        Noise synthesis:
+                        حذف نویز:{' '}
                       </Range>
                     </div>
                     <label class={style.optionTextFirst}>
-                      Tuning:
+                      تنظیم نوع بهینه‌سازی:
                       <Select
                         value={tune}
                         onChange={this._inputChange('tune', 'number')}
                       >
-                        <option value={AVIFTune.auto}>Auto</option>
+                        <option value={AVIFTune.auto}>خودکار</option>
                         <option value={AVIFTune.psnr}>PSNR</option>
                         <option value={AVIFTune.ssim}>SSIM</option>
                       </Select>
@@ -307,7 +307,7 @@ export class Options extends Component<Props, State> {
                   value={tileRows}
                   onInput={this._inputChange('tileRows', 'number')}
                 >
-                  Log2 of tile rows:
+                  لگاریتم ۲ تعداد سطرها:
                 </Range>
               </div>
               <div class={style.optionOneCell}>
@@ -317,7 +317,7 @@ export class Options extends Component<Props, State> {
                   value={tileCols}
                   onInput={this._inputChange('tileCols', 'number')}
                 >
-                  Log2 of tile cols:
+                  لگاریتم ۲ تعداد ستون‌ها:
                 </Range>
               </div>
             </div>
@@ -330,7 +330,7 @@ export class Options extends Component<Props, State> {
             value={effort}
             onInput={this._inputChange('effort', 'number')}
           >
-            Effort:
+            میزان تلاش برای فشرده‌سازی:
           </Range>
         </div>
       </form>
