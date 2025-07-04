@@ -8,7 +8,7 @@
   height: 10px;
   fill: var(--white);
   transition: transform 200ms ease;
-  transform: rotate(-90deg);
+  transform: rotate(90deg);
 
   svg {
     width: 100%;

@@ -214,11 +214,11 @@ export class Options extends Component<Props, State> {
                 )}
               </Expander>
               <label class={style.optionReveal}>
+                تنظیمات پیشرفته
                 <Revealer
                   checked={showAdvanced}
                   onChange={linkState(this, 'showAdvanced')}
                 />
-                تنظیمات پیشرفته
               </label>
               <Expander>
                 {showAdvanced && (

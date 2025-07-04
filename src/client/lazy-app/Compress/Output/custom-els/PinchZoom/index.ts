@@ -289,7 +289,7 @@ export default class PinchZoom extends HTMLElement {
     this._positioningEl = this.children[0];
 
     if (this.children.length > 1) {
-      console.warn('<pinch-zoom> must not have more than one child.');
+      console.warn('<pinch-zoom> نباید بیش از یک فرزند داشته باشد.');
     }
 
     // Do a bounds check

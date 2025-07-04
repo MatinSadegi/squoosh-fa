@@ -203,7 +203,7 @@ export default class MultiPanel extends HTMLElement {
       // it means it has odd number of elements. log error and set heading to end the loop.
       if (!content) {
         console.error(
-          '<multi-panel> requires an even number of element children.',
+          '<multi-panel> به تعداد زوج عناصر فرزند نیاز دارد.',
         );
         break;
       }

@@ -120,7 +120,7 @@ async function decodeImage(
   } catch (err) {
     if (err instanceof Error && err.name === 'AbortError') throw err;
     console.log(err);
-    throw Error("Couldn't decode image");
+    throw Error('عدم توانایی در دیکود کردن تصویر');
   }
 }
 
@@ -232,7 +232,8 @@ async function processSvg(
   }
 
   const viewBox = svg.getAttribute('viewBox');
-  if (viewBox === null) throw Error('SVG must have width/height or viewBox');
+  if (viewBox === null)
+    throw Error('SVG باید دارای width/height یا viewBox باشد');
 
   const viewboxParts = viewBox.split(/\s+/);
   svg.setAttribute('width', viewboxParts[2]);
@@ -431,7 +432,7 @@ export default class Compress extends Component<Props, State> {
       sides: cleanSet(this.state.sides, otherIndex, newSettings),
     });
 
-    const result = await this.props.showSnack('Settings copied across', {
+    const result = await this.props.showSnack('تنظیمات کپی شد', {
       timeout: 5000,
       actions: ['undo', 'dismiss'],
     });
@@ -457,7 +458,7 @@ export default class Compress extends Component<Props, State> {
       localStorage.setItem('leftSideSettings', leftSideSettings);
       // Firing an event when we save side settings in localstorage
       window.dispatchEvent(new CustomEvent('leftSideSettings'));
-      await this.props.showSnack('Left side settings saved', {
+      await this.props.showSnack('تنظیمات سمت چپ ذخیره شد', {
         timeout: 1500,
         actions: ['dismiss'],
       });
@@ -472,7 +473,7 @@ export default class Compress extends Component<Props, State> {
       localStorage.setItem('rightSideSettings', rightSideSettings);
       // Firing an event when we save side settings in localstorage
       window.dispatchEvent(new CustomEvent('rightSideSettings'));
-      await this.props.showSnack('Right side settings saved', {
+      await this.props.showSnack('تنظیمات سمت راست ذخیره شد', {
         timeout: 1500,
         actions: ['dismiss'],
       });
@@ -499,7 +500,7 @@ export default class Compress extends Component<Props, State> {
       this.setState({
         sides: cleanSet(this.state.sides, index, newLeftSideSettings),
       });
-      const result = await this.props.showSnack('Left side settings imported', {
+      const result = await this.props.showSnack('تنظیمات سمت چپ بارگذاری شد', {
         timeout: 3000,
         actions: ['undo', 'dismiss'],
       });
@@ -521,7 +522,7 @@ export default class Compress extends Component<Props, State> {
         sides: cleanSet(this.state.sides, index, newRightSideSettings),
       });
       const result = await this.props.showSnack(
-        'Right side settings imported',
+        'تنظیمات سمت راست بارگذاری شد',
         {
           timeout: 3000,
           actions: ['undo', 'dismiss'],
@@ -724,7 +725,7 @@ export default class Compress extends Component<Props, State> {
         });
       } catch (err) {
         if (err instanceof Error && err.name === 'AbortError') return;
-        this.props.showSnack(`Source decoding error: ${err}`);
+        this.props.showSnack(`خطا در decode منبع: ${err}`);
         throw err;
       }
     } else {
@@ -783,7 +784,7 @@ export default class Compress extends Component<Props, State> {
       } catch (err) {
         if (err instanceof Error && err.name === 'AbortError') return;
         this.setState({ loading: false });
-        this.props.showSnack(`Preprocessing error: ${err}`);
+        this.props.showSnack(`خطا در پیش‌پردازش: ${err}`);
         throw err;
       }
     } else {
@@ -912,7 +913,7 @@ export default class Compress extends Component<Props, State> {
           });
           return { sides };
         });
-        this.props.showSnack(`Processing error: ${err}`);
+        this.props.showSnack(`خطا در پردازش: ${err}`);
         throw err;
       }
     });
@@ -951,7 +952,7 @@ export default class Compress extends Component<Props, State> {
         typeLabel={
           side.latestSettings.encoderState
             ? encoderMap[side.latestSettings.encoderState.type].meta.label
-            : `${side.file ? `${side.file.name}` : 'Original Image'}`
+            : `${side.file ? `${side.file.name}` : 'تصویر اصلی'}`
         }
       />
     ));
