@@ -5,7 +5,7 @@
 
 .track {
   --thumb-size: 14px;
-  background: var(--black);
+  border: 1px solid gray;
   border-radius: 1000px;
   width: 24px;
   padding: 3px calc(var(--thumb-size) / 2 + 3px);

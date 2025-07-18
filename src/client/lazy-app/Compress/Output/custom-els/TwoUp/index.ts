@@ -17,40 +17,22 @@ export default class TwoUp extends HTMLElement {
   }
 
   private readonly _handle = document.createElement('div');
-  /**
-   * The position of the split in pixels.
-   */
   private _position = 0;
-  /**
-   * The position of the split in %.
-   */
   private _relativePosition = 0.5;
-  /**
-   * The value of _position when the pointer went down.
-   */
   private _positionOnPointerStart = 0;
-  /**
-   * Has connectedCallback been called yet?
-   */
   private _everConnected = false;
-
   private _resizeObserver?: ResizeObserver;
 
   constructor() {
     super();
     this._handle.className = styles.twoUpHandle;
 
-    // Watch for children changes.
-    // Note this won't fire for initial contents,
-    // so _childrenChange is also called in connectedCallback.
     new MutationObserver(() => this._childrenChange()).observe(this, {
       childList: true,
     });
 
-    // Watch for pointers on the handle.
     const pointerTracker: PointerTracker = new PointerTracker(this._handle, {
       start: (_, event) => {
-        // We only want to track 1 pointer.
         if (pointerTracker.currentPointers.length === 1) return false;
         event.preventDefault();
         this._positionOnPointerStart = this._position;
@@ -68,16 +50,8 @@ export default class TwoUp extends HTMLElement {
   connectedCallback() {
     this._childrenChange();
 
-    // prettier-ignore
-    this._handle.innerHTML =
-      `<div class="${styles.scrubber}">${
-        `<svg viewBox="0 0 27 20">${
-          `<path class="${styles.arrowLeft}" d="M9.6 0L0 9.6l9.6 9.6z"/>` +
-          `<path class="${styles.arrowRight}" d="M17 19.2l9.5-9.6L16.9 0z"/>`
-        }</svg>
-      `}</div>`;
+    this._handle.innerHTML = `<div class="${styles.scrubber}"><svg width="25px" height="25px" viewBox="0 0 24 24" fill="#ffff" xmlns="http://www.w3.org/2000/svg"><path d="M16.1359 18.2928C16.5264 18.6833 17.1596 18.6833 17.5501 18.2928L22.4375 13.4006C23.2179 12.6194 23.2176 11.3536 22.4369 10.5728L17.5465 5.68247C17.156 5.29195 16.5228 5.29195 16.1323 5.68247C15.7418 6.073 15.7418 6.70616 16.1323 7.09669L20.3179 11.2823C20.7085 11.6729 20.7085 12.306 20.3179 12.6965L16.1359 16.8786C15.7454 17.2691 15.7454 17.9023 16.1359 18.2928Z" fill="#0F0F0F"/><path d="M7.88675 5.68247C7.49623 5.29195 6.86307 5.29195 6.47254 5.68247L1.58509 10.5747C0.804698 11.3559 0.805008 12.6217 1.58579 13.4024L6.47615 18.2928C6.86667 18.6833 7.49984 18.6833 7.89036 18.2928C8.28089 17.9023 8.28089 17.2691 7.89036 16.8786L3.70471 12.6929C3.31419 12.3024 3.31419 11.6692 3.70472 11.2787L7.88675 7.09669C8.27728 6.70616 8.27728 6.073 7.88675 5.68247Z" fill="#0F0F0F"/></svg></div>`;
 
-    // Watch for element size changes.
     this._resizeObserver = new ResizeObserver(() => this._resetPosition());
     this._resizeObserver.observe(this);
 
@@ -100,69 +74,132 @@ export default class TwoUp extends HTMLElement {
     }
   }
 
-  // KeyDown event handler
+  /**
+   * **اصلاح نهایی:** این متد حالا هم اندازه و هم موقعیت استاتیک خط جداکننده را تنظیم می‌کند
+   */
+  public updateHandleSize() {
+    requestAnimationFrame(() => {
+      const renderedBounds = this._getRenderedImageBounds();
+
+      if (renderedBounds) {
+        if (this.orientation === 'vertical') {
+          this._handle.style.width = `${renderedBounds.width}px`;
+          this._handle.style.left = `${renderedBounds.x}px`;
+          this._handle.style.height = ''; // Reset
+          this._handle.style.top = ''; // Reset
+        } else { // horizontal
+          this._handle.style.height = `${renderedBounds.height}px`;
+          this._handle.style.top = `${renderedBounds.y}px`;
+          this._handle.style.width = ''; // Reset
+          this._handle.style.left = ''; // Reset
+        }
+      }
+    });
+  }
+
+  private _getRenderedImageBounds(): { x: number; y: number; width: number; height: number } | null {
+    const canvas = this.querySelector('canvas');
+    if (!canvas) return null;
+
+    const twoUpBounds = this.getBoundingClientRect();
+    const canvasBounds = canvas.getBoundingClientRect();
+
+    const canvasClientWidth = canvas.clientWidth;
+    const canvasClientHeight = canvas.clientHeight;
+    const imageIntrinsicWidth = canvas.width;
+    const imageIntrinsicHeight = canvas.height;
+
+    if (!imageIntrinsicWidth || !imageIntrinsicHeight) return null;
+
+    const containerRatio = canvasClientWidth / canvasClientHeight;
+    const imageRatio = imageIntrinsicWidth / imageIntrinsicHeight;
+
+    let renderedWidth: number;
+    let renderedHeight: number;
+
+    if (imageRatio > containerRatio) {
+      renderedWidth = canvasClientWidth;
+      renderedHeight = canvasClientWidth / imageRatio;
+    } else {
+      renderedHeight = canvasClientHeight;
+      renderedWidth = canvasClientHeight * imageRatio;
+    }
+
+    const offsetX = (canvasClientWidth - renderedWidth) / 2;
+    const offsetY = (canvasClientHeight - renderedHeight) / 2;
+
+    const x = canvasBounds.left - twoUpBounds.left + offsetX;
+    const y = canvasBounds.top - twoUpBounds.top + offsetY;
+
+    return { x, y, width: renderedWidth, height: renderedHeight };
+  }
+
   private _onKeyDown = (event: KeyboardEvent) => {
     const target = event.target;
     if (target instanceof HTMLElement && target.closest('input')) return;
 
-    if (event.code === 'Digit1' || event.code === 'Numpad1') {
-      this._position = 0;
-      this._relativePosition = 0;
-      this._setPosition();
-    } else if (event.code === 'Digit2' || event.code === 'Numpad2') {
-      const dimensionAxis =
-        this.orientation === 'vertical' ? 'height' : 'width';
-      const bounds = this.getBoundingClientRect();
+    const renderedBounds = this._getRenderedImageBounds();
+    if (!renderedBounds) return;
 
-      this._position = bounds[dimensionAxis] / 2;
-      this._relativePosition = this._position / bounds[dimensionAxis] / 2;
-      this._setPosition();
-    } else if (event.code === 'Digit3' || event.code === 'Numpad3') {
-      const dimensionAxis =
-        this.orientation === 'vertical' ? 'height' : 'width';
-      const bounds = this.getBoundingClientRect();
+    const twoUpBounds = this.getBoundingClientRect();
+    const dimensionAxis = this.orientation === 'vertical' ? 'height' : 'width';
 
-      this._position = bounds[dimensionAxis];
-      this._relativePosition = this._position / bounds[dimensionAxis];
-      this._setPosition();
+    let minPosition: number, maxPosition: number;
+
+    if (this.orientation === 'vertical') {
+      minPosition = renderedBounds.y;
+      maxPosition = renderedBounds.y + renderedBounds.height;
+    } else {
+      minPosition = renderedBounds.x;
+      maxPosition = renderedBounds.x + renderedBounds.width;
     }
+
+    if (event.code === 'Digit1' || event.code === 'Numpad1') {
+      this._position = minPosition;
+    } else if (event.code === 'Digit2' || event.code === 'Numpad2') {
+      this._position = minPosition + (maxPosition - minPosition) / 2;
+    } else if (event.code === 'Digit3' || event.code === 'Numpad3') {
+      this._position = maxPosition;
+    } else {
+      return;
+    }
+
+    this._relativePosition = this._position / twoUpBounds[dimensionAxis];
+    this._setPosition();
   };
 
   private _resetPosition() {
-    // Set the initial position of the handle.
     requestAnimationFrame(() => {
-      const bounds = this.getBoundingClientRect();
-      const dimensionAxis =
-        this.orientation === 'vertical' ? 'height' : 'width';
-      this._position = bounds[dimensionAxis] * this._relativePosition;
+      this.updateHandleSize();
+
+      const renderedBounds = this._getRenderedImageBounds();
+      const twoUpBounds = this.getBoundingClientRect();
+      const dimensionAxis = this.orientation === 'vertical' ? 'height' : 'width';
+
+      if (!renderedBounds) {
+        this._position = twoUpBounds[dimensionAxis] * this._relativePosition;
+      } else {
+        if (this.orientation === 'vertical') {
+          this._position = renderedBounds.y + renderedBounds.height * this._relativePosition;
+        } else {
+          this._position = renderedBounds.x + renderedBounds.width * this._relativePosition;
+        }
+      }
       this._setPosition();
     });
   }
 
-  /**
-   * If true, this element works in browsers that don't support clip-path (Edge).
-   * However, this means you'll have to set the height of this element manually.
-   */
   get legacyClipCompat() {
     return this.hasAttribute(legacyClipCompatAttr);
   }
 
   set legacyClipCompat(val: boolean) {
-    if (val) {
-      this.setAttribute(legacyClipCompatAttr, '');
-    } else {
-      this.removeAttribute(legacyClipCompatAttr);
-    }
+    if (val) this.setAttribute(legacyClipCompatAttr, '');
+    else this.removeAttribute(legacyClipCompatAttr);
   }
 
-  /**
-   * Split vertically rather than horizontally.
-   */
   get orientation(): TwoUpOrientation {
     const value = this.getAttribute(orientationAttr);
-
-    // This mirrors the behaviour of input.type, where setting just sets the attribute, but getting
-    // returns the value only if it's valid.
     if (value && value.toLowerCase() === 'vertical') return 'vertical';
     return 'horizontal';
   }
@@ -171,35 +208,49 @@ export default class TwoUp extends HTMLElement {
     this.setAttribute(orientationAttr, val);
   }
 
-  /**
-   * Called when element's child list changes
-   */
   private _childrenChange() {
-    // Ensure the handle is the last child.
-    // The CSS depends on this.
     if (this.lastElementChild !== this._handle) {
       this.appendChild(this._handle);
     }
   }
 
-  /**
-   * Called when a pointer moves.
-   */
   private _pointerChange(startPoint: Pointer, currentPoint: Pointer) {
     const pointAxis = this.orientation === 'vertical' ? 'clientY' : 'clientX';
     const dimensionAxis = this.orientation === 'vertical' ? 'height' : 'width';
-    const bounds = this.getBoundingClientRect();
+
+    const renderedBounds = this._getRenderedImageBounds();
+    const twoUpBounds = this.getBoundingClientRect();
+
+    if (!renderedBounds) {
+      this._position =
+        this._positionOnPointerStart +
+        (currentPoint[pointAxis] - startPoint[pointAxis]);
+      this._position = Math.max(0, Math.min(this._position, twoUpBounds[dimensionAxis]));
+      this._relativePosition = this._position / twoUpBounds[dimensionAxis];
+      this._setPosition();
+      return;
+    }
+
+    let minPosition: number, maxPosition: number;
+
+    if (this.orientation === 'horizontal') {
+      minPosition = renderedBounds.x;
+      maxPosition = renderedBounds.x + renderedBounds.width;
+    } else {
+      minPosition = renderedBounds.y;
+      maxPosition = renderedBounds.y + renderedBounds.height;
+    }
 
     this._position =
       this._positionOnPointerStart +
       (currentPoint[pointAxis] - startPoint[pointAxis]);
 
-    // Clamp position to element bounds.
     this._position = Math.max(
-      0,
-      Math.min(this._position, bounds[dimensionAxis]),
+      minPosition,
+      Math.min(this._position, maxPosition),
     );
-    this._relativePosition = this._position / bounds[dimensionAxis];
+
+    this._relativePosition = this._position / twoUpBounds[dimensionAxis];
     this._setPosition();
   }
 

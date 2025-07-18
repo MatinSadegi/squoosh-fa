@@ -5,7 +5,7 @@ import 'add-css:./style.css';
 import 'shared/custom-els/loading-spinner';
 import { SourceImage } from '../';
 import prettyBytes from './pretty-bytes';
-import { Arrow, DownloadIcon } from 'client/lazy-app/icons';
+import { Arrow, DownloadIcon, ArrowLeft } from 'client/lazy-app/icons';
 
 interface Props {
   loading: boolean;
@@ -21,6 +21,12 @@ interface State {
 }
 
 const loadingReactionDelay = 500;
+const unitMap: { [key: string]: string } = {
+  B: 'بایت',
+  kB: 'کیلوبایت',
+  mB: 'مگابایت',
+  gb: 'گیگابایت',
+};
 
 export default class Results extends Component<Props, State> {
   state: State = {
@@ -63,9 +69,13 @@ export default class Results extends Component<Props, State> {
     { showLoadingState }: State,
   ) {
     const prettySize = imageFile && prettyBytes(imageFile.size);
+    const displayUnit = prettySize
+      ? unitMap[prettySize.unit] || prettySize.unit
+      : '';
     const isOriginal = !source || !imageFile || source.file === imageFile;
     let diff;
     let percent;
+    console.log(imageFile?.size, prettySize);
 
     if (source && imageFile) {
       diff = imageFile.size / source.file.size;
@@ -74,67 +84,110 @@ export default class Results extends Component<Props, State> {
     }
 
     return (
-      <div
-        class={
-          (flipSide ? style.resultsRight : style.resultsLeft) +
-          ' ' +
-          (isOriginal ? style.isOriginal : '')
-        }
-      >
-        <div class={style.expandArrow}>
-          <Arrow />
+      // <div
+      //   class={
+      //     (flipSide ? style.resultsRight : style.resultsLeft) +
+      //     ' ' +
+      //     (isOriginal ? style.isOriginal : '')
+      //   }
+      // >
+      //   <div class={style.expandArrow}>
+      //     <Arrow />
+      //   </div>
+      //   <div class={style.bubble}>
+      //     <div class={style.bubbleInner}>
+      //       <div class={style.sizeInfo}>
+      //         <div class={style.fileSize}>
+      //           {prettySize ? (
+      //             <Fragment>
+      //               {prettySize.value}{' '}
+      //               <span class={style.unit}>{prettySize.unit}</span>
+      //               <span class={style.typeLabel}> {typeLabel}</span>
+      //             </Fragment>
+      //           ) : (
+      //             '…'
+      //           )}
+      //         </div>
+      //       </div>
+      //       <div class={style.percentInfo}>
+      //         <svg
+      //           viewBox="0 0 1 2"
+      //           class={style.bigArrow}
+      //           preserveAspectRatio="none"
+      //         >
+      //           <path d="M1 0v2L0 1z" />
+      //         </svg>
+      //         <div class={style.percentOutput}>
+      //           {diff && diff !== 1 && (
+      //             <span class={style.sizeDirection}>
+      //               {diff < 1 ? '↓' : '↑'}
+      //             </span>
+      //           )}
+      //           <span class={style.sizeValue}>{percent || 0}</span>
+      //           <span class={style.percentChar}>%</span>
+      //         </div>
+      //       </div>
+      //     </div>
+      //   </div>
+      //   <a
+      //     class={showLoadingState ? style.downloadDisable : style.download}
+      //     href={downloadUrl}
+      //     download={imageFile ? imageFile.name : ''}
+      //     title="دانلود"
+      //     onClick={this.onDownload}
+      //   >
+      //     <svg class={style.downloadBlobs} viewBox="0 0 89.6 86.9">
+      //       <title>دانلود</title>
+      //       <path d="M27.3 72c-8-4-15.6-12.3-16.9-21-1.2-8.7 4-17.8 10.5-26s14.4-15.6 24-16 21.2 6 28.6 16.5c7.4 10.5 10.8 25 6.6 34S64.1 71.8 54 73.6c-10.2 2-18.7 2.3-26.7-1.6z" />
+      //       <path d="M19.8 24.8c4.3-7.8 13-15 21.8-15.7 8.7-.8 17.5 4.8 25.4 11.8 7.8 6.9 14.8 15.2 14.7 24.9s-7.1 20.7-18 27.6c-10.8 6.8-25.5 9.5-34.2 4.8S18.1 61.6 16.7 51.4c-1.3-10.3-1.3-18.8 3-26.6z" />
+      //     </svg>
+      //     <div class={style.downloadIcon}>
+      //       <DownloadIcon />
+      //     </div>
+      //     {showLoadingState && <loading-spinner />}
+      //   </a>
+      // </div>
+      <div>
+        <div class={style.fileSize}>
+          {prettySize ? (
+            <div class={style.unit}>
+              <p> {displayUnit}</p>
+              <p> {prettySize.value}</p>
+            </div>
+          ) : (
+            '…'
+          )}
+          <p>حجم تصویر بهینه‌شده</p>
         </div>
-        <div class={style.bubble}>
-          <div class={style.bubbleInner}>
-            <div class={style.sizeInfo}>
-              <div class={style.fileSize}>
-                {prettySize ? (
-                  <Fragment>
-                    {prettySize.value}{' '}
-                    <span class={style.unit}>{prettySize.unit}</span>
-                    <span class={style.typeLabel}> {typeLabel}</span>
-                  </Fragment>
-                ) : (
-                  '…'
-                )}
-              </div>
-            </div>
-            <div class={style.percentInfo}>
-              <svg
-                viewBox="0 0 1 2"
-                class={style.bigArrow}
-                preserveAspectRatio="none"
-              >
-                <path d="M1 0v2L0 1z" />
-              </svg>
-              <div class={style.percentOutput}>
-                {diff && diff !== 1 && (
-                  <span class={style.sizeDirection}>
-                    {diff < 1 ? '↓' : '↑'}
-                  </span>
-                )}
-                <span class={style.sizeValue}>{percent || 0}</span>
-                <span class={style.percentChar}>%</span>
-              </div>
-            </div>
+        <div class={style.percentInfos}>
+          <div class={style.percent}>
+            {diff && diff !== 1 && (
+              <span class={style.sizeDirection}>{diff < 1 ? '↓' : '↑'}</span>
+            )}
+            <span>{percent || 0}</span>
+            <span>%</span>
           </div>
+          <p>درصد بهینه‌شده</p>
         </div>
         <a
           class={showLoadingState ? style.downloadDisable : style.download}
+          style={{ textDecoration: 'none' }}
           href={downloadUrl}
           download={imageFile ? imageFile.name : ''}
           title="دانلود"
           onClick={this.onDownload}
         >
-          <svg class={style.downloadBlobs} viewBox="0 0 89.6 86.9">
-            <title>دانلود</title>
-            <path d="M27.3 72c-8-4-15.6-12.3-16.9-21-1.2-8.7 4-17.8 10.5-26s14.4-15.6 24-16 21.2 6 28.6 16.5c7.4 10.5 10.8 25 6.6 34S64.1 71.8 54 73.6c-10.2 2-18.7 2.3-26.7-1.6z" />
-            <path d="M19.8 24.8c4.3-7.8 13-15 21.8-15.7 8.7-.8 17.5 4.8 25.4 11.8 7.8 6.9 14.8 15.2 14.7 24.9s-7.1 20.7-18 27.6c-10.8 6.8-25.5 9.5-34.2 4.8S18.1 61.6 16.7 51.4c-1.3-10.3-1.3-18.8 3-26.6z" />
-          </svg>
-          <div class={style.downloadIcon}>
-            <DownloadIcon />
-          </div>
-          {showLoadingState && <loading-spinner />}
+          {showLoadingState ? (
+            <button class={style.resultsButton}>
+              <loading-spinner />
+              <p> در حال بارگذاری</p>
+            </button>
+          ) : (
+            <button class={style.resultsButton}>
+              <ArrowLeft />
+              <p>دانلود تصویر بهینه‌شده</p>
+            </button>
+          )}
         </a>
       </div>
     );

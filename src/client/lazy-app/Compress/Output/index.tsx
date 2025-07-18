@@ -1,6 +1,7 @@
 import { h, Component, Fragment } from 'preact';
 import type PinchZoom from './custom-els/PinchZoom';
 import type { ScaleToOpts } from './custom-els/PinchZoom';
+import TwoUp from './custom-els/TwoUp';
 import './custom-els/PinchZoom';
 import './custom-els/TwoUp';
 import * as style from './style.css';
@@ -21,6 +22,7 @@ import { cleanSet } from '../../util/clean-modify';
 import type { SourceImage } from '../../Compress';
 import { linkRef } from 'shared/prerendered-app/util';
 import { drawDataToCanvas } from 'client/lazy-app/util/canvas';
+import prettyBytes from '../Results/pretty-bytes';
 interface Props {
   source?: SourceImage;
   preprocessorState?: PreprocessorState;
@@ -30,6 +32,7 @@ interface Props {
   leftImgContain: boolean;
   rightImgContain: boolean;
   onPreprocessorChange: (newState: PreprocessorState) => void;
+  editedFileSize?: number;
 }
 
 interface State {
@@ -38,6 +41,12 @@ interface State {
   altBackground: boolean;
   aliasing: boolean;
 }
+
+const unitMap: { [key: string]: string } = {
+  B: 'بایت',
+  kB: 'کیلوبایت',
+  mB: 'مگابایت',
+};
 
 const scaleToOpts: ScaleToOpts = {
   originX: '50%',
@@ -59,6 +68,28 @@ export default class Output extends Component<Props, State> {
   pinchZoomRight?: PinchZoom;
   scaleInput?: HTMLInputElement;
   retargetedEvents = new WeakSet<Event>();
+  coverRef?: HTMLDivElement;
+  twoUpRef?: TwoUp;
+
+  // **اصلاح شده:** این تابع حالا فقط پس‌زمینه عنصر cover را آپدیت می‌کند
+  private updateCoverBackground = (imageData: ImageData | undefined) => {
+    // اگر ref یا عکس وجود نداشت، کاری نکن
+    if (!this.coverRef || !imageData) {
+      if (this.coverRef) this.coverRef.style.backgroundImage = 'none';
+      return;
+    }
+
+    const tempCanvas = document.createElement('canvas');
+    tempCanvas.width = imageData.width;
+    tempCanvas.height = imageData.height;
+    const ctx = tempCanvas.getContext('2d');
+
+    if (ctx) {
+      ctx.putImageData(imageData, 0, 0);
+      // پس‌زمینه عنصر cover را با عکس جدید تنظیم می‌کنیم
+      this.coverRef.style.backgroundImage = `url(${tempCanvas.toDataURL()})`;
+    }
+  };
 
   componentDidMount() {
     const leftDraw = this.leftDrawable();
@@ -66,18 +97,22 @@ export default class Output extends Component<Props, State> {
 
     // Reset the pinch zoom, which may have an position set from the previous view, after pressing
     // the back button.
-    this.pinchZoomLeft!.setTransform({
-      allowChangeEvent: true,
-      x: 0,
-      y: 0,
-      scale: 1,
-    });
+    // this.pinchZoomLeft!.setTransform({
+    //   allowChangeEvent: true,
+    //   x: 0,
+    //   y: 0,
+    //   scale: 1,
+    // });
 
     if (this.canvasLeft && leftDraw) {
       drawDataToCanvas(this.canvasLeft, leftDraw);
+      this.updateCoverBackground(leftDraw);
     }
     if (this.canvasRight && rightDraw) {
       drawDataToCanvas(this.canvasRight, rightDraw);
+    }
+    if (this.twoUpRef) {
+      this.twoUpRef.updateHandleSize();
     }
   }
 
@@ -96,40 +131,17 @@ export default class Output extends Component<Props, State> {
 
     const oldSourceData = prevProps.source && prevProps.source.preprocessed;
     const newSourceData = this.props.source && this.props.source.preprocessed;
-    const pinchZoom = this.pinchZoomLeft!;
-
-    if (sourceFileChanged) {
-      // New image? Reset the pinch-zoom.
-      pinchZoom.setTransform({
-        allowChangeEvent: true,
-        x: 0,
-        y: 0,
-        scale: 1,
-      });
-    } else if (
-      oldSourceData &&
-      newSourceData &&
-      oldSourceData !== newSourceData
-    ) {
-      // Since the pinch zoom transform origin is the top-left of the content, we need to flip
-      // things around a bit when the content size changes, so the new content appears as if it were
-      // central to the previous content.
-      const scaleChange = 1 - pinchZoom.scale;
-      const oldXScaleOffset = (oldSourceData.width / 2) * scaleChange;
-      const oldYScaleOffset = (oldSourceData.height / 2) * scaleChange;
-
-      pinchZoom.setTransform({
-        allowChangeEvent: true,
-        x: pinchZoom.x - oldXScaleOffset + oldYScaleOffset,
-        y: pinchZoom.y - oldYScaleOffset + oldXScaleOffset,
-      });
-    }
+    // const pinchZoom = this.pinchZoomLeft!;
 
     if (leftDraw && leftDraw !== prevLeftDraw && this.canvasLeft) {
       drawDataToCanvas(this.canvasLeft, leftDraw);
+      this.updateCoverBackground(leftDraw);
     }
     if (rightDraw && rightDraw !== prevRightDraw && this.canvasRight) {
       drawDataToCanvas(this.canvasRight, rightDraw);
+    }
+    if (this.twoUpRef) {
+      this.twoUpRef.updateHandleSize();
     }
   }
 
@@ -158,16 +170,6 @@ export default class Output extends Component<Props, State> {
     this.setState({
       altBackground: !this.state.altBackground,
     });
-  };
-
-  private zoomIn = () => {
-    if (!this.pinchZoomLeft) throw Error('عنصر pinch-zoom یافت نشد');
-    this.pinchZoomLeft.scaleTo(this.state.scale * 1.25, scaleToOpts);
-  };
-
-  private zoomOut = () => {
-    if (!this.pinchZoomLeft) throw Error('عنصر pinch-zoom یافت نشد');
-    this.pinchZoomLeft.scaleTo(this.state.scale / 1.25, scaleToOpts);
   };
 
   private onRotateClick = () => {
@@ -199,29 +201,6 @@ export default class Output extends Component<Props, State> {
     this.setState({ editingScale: false });
   };
 
-  private onScaleInputChanged = (event: Event) => {
-    const target = event.target as HTMLInputElement;
-    const percent = parseFloat(target.value);
-    if (isNaN(percent)) return;
-    if (!this.pinchZoomLeft) throw Error('عنصر pinch-zoom یافت نشد');
-
-    this.pinchZoomLeft.scaleTo(percent / 100, scaleToOpts);
-  };
-
-  private onPinchZoomLeftChange = (event: Event) => {
-    if (!this.pinchZoomRight || !this.pinchZoomLeft) {
-      throw Error('عنصر pinch-zoom یافت نشد');
-    }
-    this.setState({
-      scale: this.pinchZoomLeft.scale,
-    });
-    this.pinchZoomRight.setTransform({
-      scale: this.pinchZoomLeft.scale,
-      x: this.pinchZoomLeft.x,
-      y: this.pinchZoomLeft.y,
-    });
-  };
-
   /**
    * We're using two pinch zoom elements, but we want them to stay in sync. When one moves, we
    * update the position of the other. However, this is tricky when it comes to multi-touch, when
@@ -232,7 +211,6 @@ export default class Output extends Component<Props, State> {
    */
   private onRetargetableEvent = (event: Event) => {
     const targetEl = event.target as HTMLElement;
-    if (!this.pinchZoomLeft) throw Error('عنصر pinch-zoom یافت نشد');
     // If the event is on the handle of the two-up, let it through,
     // unless it's a wheel event, in which case always let it through.
     if (event.type !== 'wheel' && targetEl.closest(`.${twoUpHandle}`)) return;
@@ -248,7 +226,6 @@ export default class Output extends Component<Props, State> {
       event,
     );
     this.retargetedEvents.add(clonedEvent);
-    this.pinchZoomLeft.dispatchEvent(clonedEvent);
 
     // Unfocus any active element on touchend. This fixes an issue on (at least) Android Chrome,
     // where the software keyboard is hidden, but the input remains focused, then after interaction
@@ -263,13 +240,34 @@ export default class Output extends Component<Props, State> {
   };
 
   render(
-    { mobileView, leftImgContain, rightImgContain, source }: Props,
+    {
+      mobileView,
+      leftImgContain,
+      rightImgContain,
+      source,
+      editedFileSize,
+    }: Props,
     { scale, editingScale, altBackground, aliasing }: State,
   ) {
     const leftDraw = this.leftDrawable();
     const rightDraw = this.rightDrawable();
     // To keep position stable, the output is put in a square using the longest dimension.
     const originalImage = source && source.preprocessed;
+
+    const originalSize = source && prettyBytes(source.file.size);
+    console.log('Original Size:', originalSize); // اضافه شده
+    const originalUnit = originalSize
+      ? unitMap[originalSize.unit] || originalSize.unit
+      : '';
+    console.log(source?.file);
+
+    const editedSize =
+      editedFileSize !== undefined && prettyBytes(editedFileSize);
+    console.log('Edited Size:', editedSize); // اضافه شده
+    console.log('Edited Sizessssssssssssssssssss:', editedFileSize); // اضافه شده
+    const editedUnit = editedSize
+      ? unitMap[editedSize.unit] || editedSize.unit
+      : '';
 
     return (
       <Fragment>
@@ -279,6 +277,7 @@ export default class Output extends Component<Props, State> {
           <two-up
             legacy-clip-compat
             class={style.twoUp}
+            ref={linkRef(this, 'twoUpRef')}
             orientation={mobileView ? 'vertical' : 'horizontal'}
             // Event redirecting. See onRetargetableEvent.
             onTouchStartCapture={this.onRetargetableEvent}
@@ -294,106 +293,72 @@ export default class Output extends Component<Props, State> {
           >
             <pinch-zoom
               class={style.pinchZoom}
-              onChange={this.onPinchZoomLeftChange}
               ref={linkRef(this, 'pinchZoomLeft')}
             >
-              <canvas
-                class={`${style.pinchTarget} ${
-                  aliasing ? style.pixelated : ''
-                }`}
-                ref={linkRef(this, 'canvasLeft')}
-                width={leftDraw && leftDraw.width}
-                height={leftDraw && leftDraw.height}
-                style={{
-                  width: originalImage ? originalImage.width : '',
-                  height: originalImage ? originalImage.height : '',
-                  objectFit: leftImgContain ? 'contain' : '',
-                }}
-              />
+              <div class={style.canvasParent}>
+                <canvas
+                  class={`${style.pinchTarget} ${
+                    aliasing ? style.pixelated : ''
+                  }`}
+                  ref={linkRef(this, 'canvasLeft')}
+                  width={leftDraw && leftDraw.width}
+                  height={leftDraw && leftDraw.height}
+                  style={{
+                    width: originalImage ? originalImage.width : '',
+                    height: originalImage ? originalImage.height : '',
+                    objectFit: leftImgContain ? 'contain' : '',
+                  }}
+                />
+              </div>
             </pinch-zoom>
+
             <pinch-zoom
               class={style.pinchZoom}
               ref={linkRef(this, 'pinchZoomRight')}
             >
-              <canvas
-                class={`${style.pinchTarget} ${
-                  aliasing ? style.pixelated : ''
-                }`}
-                ref={linkRef(this, 'canvasRight')}
-                width={rightDraw && rightDraw.width}
-                height={rightDraw && rightDraw.height}
-                style={{
-                  width: originalImage ? originalImage.width : '',
-                  height: originalImage ? originalImage.height : '',
-                  objectFit: rightImgContain ? 'contain' : '',
-                }}
-              />
+              <div class={style.canvasParent}>
+                <canvas
+                  class={`${style.pinchTarget} ${
+                    aliasing ? style.pixelated : ''
+                  }`}
+                  ref={linkRef(this, 'canvasRight')}
+                  width={rightDraw && rightDraw.width}
+                  height={rightDraw && rightDraw.height}
+                  style={{
+                    width: originalImage ? originalImage.width : '',
+                    height: originalImage ? originalImage.height : '',
+                    objectFit: rightImgContain ? 'contain' : '',
+                  }}
+                />
+              </div>
             </pinch-zoom>
+            <div className={style.cover} ref={linkRef(this, 'coverRef')}>
+              <div className={style.sizes}>
+                <div className={style.originalSize}>
+                  <p>تصویر اصلی</p>
+                  {/* **اصلاح شده:** نمایش حجم اصلی به صورت داینامیک */}
+                  {originalSize ? (
+                    <p>
+                      حجم: {originalSize.value} {originalUnit}
+                    </p>
+                  ) : (
+                    <p>حجم: درحال پردازش</p>
+                  )}
+                </div>
+                <div className={style.optimizeSize}>
+                  <p>تصویر بهینه‌شده</p>
+                  {/* **اصلاح شده:** نمایش حجم ویرایش شده به صورت داینامیک */}
+                  {editedSize ? (
+                    <p>
+                      حجم: {editedSize.value} {editedUnit}
+                    </p>
+                  ) : (
+                    <p>حجم: درحال پردازش</p>
+                  )}
+                </div>
+              </div>
+            </div>
           </two-up>
-        </div>
-        <div class={style.controls}>
-          <div class={style.buttonGroup}>
-            <button class={style.firstButton} onClick={this.zoomOut}>
-              <RemoveIcon />
-            </button>
-            {editingScale ? (
-              <input
-                type="number"
-                step="1"
-                min="1"
-                max="1000000"
-                ref={linkRef(this, 'scaleInput')}
-                class={style.zoom}
-                value={Math.round(scale * 100)}
-                onInput={this.onScaleInputChanged}
-                onBlur={this.onScaleInputBlur}
-              />
-            ) : (
-              <span
-                class={style.zoom}
-                tabIndex={0}
-                onFocus={this.onScaleValueFocus}
-              >
-                <span class={style.zoomValue}>{Math.round(scale * 100)}</span>%
-              </span>
-            )}
-            <button class={style.lastButton} onClick={this.zoomIn}>
-              <AddIcon />
-            </button>
-          </div>
-          <div class={style.buttonGroup}>
-            <button
-              class={style.firstButton}
-              onClick={this.onRotateClick}
-              title="چرخش"
-            >
-              <RotateIcon />
-            </button>
-            {!isSafari && (
-              <button
-                class={style.button}
-                onClick={this.toggleAliasing}
-                title="تغییر هموارسازی"
-              >
-                {aliasing ? (
-                  <ToggleAliasingActiveIcon />
-                ) : (
-                  <ToggleAliasingIcon />
-                )}
-              </button>
-            )}
-            <button
-              class={style.lastButton}
-              onClick={this.toggleBackground}
-              title="تغییر پس‌زمینه"
-            >
-              {altBackground ? (
-                <ToggleBackgroundActiveIcon />
-              ) : (
-                <ToggleBackgroundIcon />
-              )}
-            </button>
-          </div>
         </div>
       </Fragment>
     );

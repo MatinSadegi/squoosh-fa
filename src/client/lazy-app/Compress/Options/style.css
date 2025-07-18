@@ -2,24 +2,24 @@
   --horizontal-padding: 15px;
   border-radius: var(--scroller-radius);
   overflow: hidden;
+  direction: rtl;
+  color: var(--dim-text);
 
   /* At smaller widths, the multi-panel handles the scrolling */
   @media (min-width: 600px) {
     overflow-x: hidden;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
-    direction: rtl;
   }
 }
 
 .options-title {
-  background-color: var(--main-theme-color);
   color: var(--header-text-color);
   margin: 0;
   padding: 10px var(--horizontal-padding);
   font-weight: bold;
   font-size: 1.4rem;
-  border-bottom: 1px solid var(--off-black);
+
   transition: all 300ms ease-in-out;
   transition-property: background-color, color;
 
@@ -69,29 +69,36 @@
 .option-one-cell {
   display: grid;
   grid-template-columns: 1fr;
-  padding: 10px var(--horizontal-padding);
+  padding: 5px 0px;
 }
 
 .section-enabler {
   composes: option-toggle;
-  background: var(--dark-gray);
-  padding: 15px var(--horizontal-padding);
-  border-bottom: 1px solid var(--off-black);
+  /* background: var(--dark-gray); */
+  /* padding: 15px var(--horizontal-padding); */
+  /* border-bottom: 1px solid var(--off-black); */
+  padding: 25px;
+  border-radius: 15px;
+  background: white;
+  border: 1px solid gray;
+  font-size: 18px;
 }
 
 .options-section {
-  background: var(--off-black);
+  border-top: 0px;
+
+  font-size: 16px;
 }
 
 .text-field {
-  background-color: var(--black);
-  color: var(--white);
+  background-color: white;
+  color: var(--dim-text);
   font: inherit;
-  border: none;
-  padding: 6px 6px 6px 10px;
+  border: 1px solid gray;
+  padding: 5px 15px;
   width: 100%;
   box-sizing: border-box;
-  border-radius: 4px;
+  border-radius: 5px;
 }
 
 .title-and-buttons {

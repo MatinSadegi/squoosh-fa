@@ -85,6 +85,23 @@ export const Arrow = () => (
     <path d="M8.2.2a1 1 0 011.4 1.4l-4 4a1 1 0 01-1.4 0l-4-4A1 1 0 011.6.2l3.3 3.3L8.2.2z" />
   </svg>
 );
+export const ArrowLeft = () => (
+  <svg
+    width="24px"
+    height="24px"
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M5 12H19M5 12L11 6M5 12L11 18"
+      stroke="#000000ff"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+  </svg>
+);
 
 export const DownloadIcon = () => (
   <svg viewBox="0 0 23.9 24.9">

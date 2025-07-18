@@ -2,7 +2,8 @@
   width: 100%;
   height: 100%;
   contain: strict;
-  display: grid;
+  overflow-y: auto;
+  display: block;
   grid-template-rows: max-content 1fr;
   grid-template-areas:
     'header'
@@ -11,30 +12,55 @@
   --options-radius: 7px;
 
   @media (min-width: 600px) {
-    grid-template-rows: max-content 1fr;
-    grid-template-columns: max-content 1fr max-content;
-    grid-template-areas:
-      'header header header'
-      'optsLeft viewportOpts optsRight';
+    display: grid;
+    width: 92vw;
+    margin: auto;
+    height: 90vh;
+    top: 50%;
+    translate: 50% -50%;
+    position: absolute;
+    top: 50%;
+    right: 50%;
+    grid-template-rows: 1fr;
+    grid-template-columns: 1fr 350px;
+    grid-template-areas: 'viewport allOptions';
   }
+  @media (min-width: 1200px) {
+    grid-template-columns: 1fr 400px;
+  }
+}
+.options-panel {
+  grid-area: allOptions; /* این کلاس را به ناحیه allOptions متصل می‌کند */
+  overflow-y: auto; /* اگر تنظیمات زیاد بود، اسکرول بخورد */
+  padding: 15px;
+}
+
+/* کلاس output از کامپوننت Output را پیدا کنید (در سوال قبلی بود) 
+  و این خط را به آن اضافه کنید تا در ناحیه viewport قرار گیرد.
+*/
+.output {
+  grid-area: viewport;
+  position: relative; /* مطمئن شوید که position آن relative است */
+  /* display: contents را حذف و display: flex بگذارید اگر لازم شد */
 }
 
 .options {
   position: relative;
   color: #fff;
   font-size: 1.2rem;
-  max-width: 400px;
-  margin: 0 auto;
+
+  margin: 0px auto;
+  margin-top: 80px;
   width: calc(100% - 60px);
   max-height: 100%;
-  overflow: hidden;
   grid-area: opts;
   display: grid;
   grid-template-rows: 1fr max-content;
-  align-content: end;
-  align-self: end;
+
+  align-self: start;
 
   @media (min-width: 600px) {
+    max-width: 400px;
     width: 300px;
     margin: 0;
   }
@@ -82,7 +108,6 @@
   position: relative;
   display: flex;
   flex-flow: column;
-  overflow: hidden;
 
   /* Reorder so headings appear after content: */
   & > :nth-child(1) {

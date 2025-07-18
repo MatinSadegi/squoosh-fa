@@ -6,7 +6,7 @@ two-up {
   --thumb-background: var(--black);
   --thumb-color: var(--accent-color);
   --thumb-size: 62px;
-  --bar-size: 9px;
+  --bar-size: 5px;
   --bar-touch-size: 30px;
 }
 
@@ -28,6 +28,10 @@ two-up[legacy-clip-compat] > :not(.two-up-handle) {
   transform: translateX(var(--split-point)) translateX(-50%);
   will-change: transform;
   cursor: ew-resize;
+  @media (min-width: 600px) {
+    top: 40px;
+  }
+  top: 0px;
 }
 
 .two-up-handle::before {
@@ -36,7 +40,7 @@ two-up[legacy-clip-compat] > :not(.two-up-handle) {
   height: 100%;
   width: var(--bar-size);
   margin: 0 auto;
-  background: var(--track-color);
+  background: white;
 }
 
 .scrubber {
@@ -48,11 +52,11 @@ two-up[legacy-clip-compat] > :not(.two-up-handle) {
   transform: translate(-50%, -50%);
   width: var(--thumb-size);
   height: var(--thumb-size);
-  background: var(--thumb-background);
+  background: white;
   border-radius: var(--thumb-size);
   color: var(--thumb-color);
   box-sizing: border-box;
-  padding: 0 calc(var(--thumb-size) * 0.24);
+  padding: 20px 18px;
 }
 
 .arrow-left {

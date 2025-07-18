@@ -163,7 +163,73 @@ export default class Options extends Component<Props, State> {
           (encoderState ? '' : style.originalImage)
         }
       >
-        <Expander>
+        <div>
+          <label class={style.sectionEnabler}>
+            تغییر اندازه تصویر
+            <Toggle
+              name="resize.enable"
+              checked={!!processorState.resize.enabled}
+              onChange={this.onProcessorEnabledChange}
+            />
+          </label>
+          <Expander>
+            {processorState.resize.enabled ? (
+              <ResizeOptionsComponent
+                isVector={Boolean(source && source.vectorImage)}
+                inputWidth={source ? source.preprocessed.width : 1}
+                inputHeight={source ? source.preprocessed.height : 1}
+                options={processorState.resize}
+                onChange={this.onResizeOptionsChange}
+              />
+            ) : null}
+          </Expander>
+          <div style={{ marginTop: '15px', marginBottom: '15px' }}>
+            <label class={style.sectionEnabler}>
+              کاهش تعداد رنگ‌ها
+              <Toggle
+                name="quantize.enable"
+                checked={!!processorState.quantize.enabled}
+                onChange={this.onProcessorEnabledChange}
+              />
+            </label>
+            <Expander>
+              {processorState.quantize.enabled ? (
+                <QuantOptionsComponent
+                  options={processorState.quantize}
+                  onChange={this.onQuantizerOptionsChange}
+                />
+              ) : null}
+            </Expander>
+          </div>
+          <div style={{ marginTop: '40px' }}>
+            <h3 class={style.optionsTitle}>فشرده‌سازی</h3>
+
+            <section class={`${style.optionOneCell} ${style.optionsSection}`}>
+              {supportedEncoderMap ? (
+                <Select
+                  value={encoderState ? encoderState.type : 'identity'}
+                  onChange={this.onEncoderTypeChange}
+                  large
+                  largeInput={true}
+                >
+                  <option value="identity">{`تصویر اصلی ${
+                    this.props.source ? `(${this.props.source.file.name})` : ''
+                  }`}</option>
+                  {Object.entries(supportedEncoderMap).map(
+                    ([type, encoder]) => (
+                      <option value={type}>{encoder.meta.label}</option>
+                    ),
+                  )}
+                </Select>
+              ) : (
+                <Select large>
+                  <option>در حال بارگذاری ...</option>
+                </Select>
+              )}
+            </section>
+          </div>
+        </div>
+        {/* <Expander>
           {!encoderState ? null : (
             <div>
               <h3 class={style.optionsTitle}>
@@ -282,7 +348,7 @@ export default class Options extends Component<Props, State> {
               onChange={this.onEncoderOptionsChange}
             />
           )}
-        </Expander>
+        </Expander> */}
       </div>
     );
   }

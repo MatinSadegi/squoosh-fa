@@ -8,7 +8,6 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: #000;
     opacity: 0.8;
     transition: opacity 500ms ease;
   }
@@ -20,6 +19,18 @@
 
 .two-up {
   composes: abs-fill from global;
+  width: 100%;
+  height: 100vh;
+  border-radius: 20px;
+  position: static;
+  @media (min-width: 1000px) {
+    width: 60%;
+  }
+  @media (min-width: 600px) {
+    width: 55%;
+    position: absolute;
+    height: 100%;
+  }
 }
 
 .pinch-zoom {
@@ -28,15 +39,79 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  width: 100%;
+  border-radius: 20px;
 }
 
 .pinch-target {
-  /* This fixes a severe painting bug in Chrome.
-   * We should try to remove this once the issue is fixed.
-   * https://bugs.chromium.org/p/chromium/issues/detail?id=870222#c10 */
-  will-change: auto;
+  width: 100% !important;
+  height: auto !important;
+  max-height: 500px;
+  object-fit: contain;
   /* Prevent the image becoming misshapen due to default flexbox layout. */
   flex-shrink: 0;
+  border-radius: 20px;
+}
+
+.canvas-parent {
+  width: 90%;
+  height: 90%;
+}
+
+.cover {
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  border-radius: 20px;
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+
+    /* عکس پس‌زمینه را از والد خود (که توسط JS تنظیم می‌شود) به ارث می‌برد */
+    background: inherit;
+    background-size: cover;
+    background-position: center;
+
+    /* افکت تاری روی این لایه اعمال می‌شود */
+    filter: blur(20px) brightness(1);
+
+    /* برای جلوگیری از دیده‌شدن لبه‌های تیز عکس تار شده */
+    transform: scale(1.2);
+  }
+}
+
+.sizes {
+  text-align: right;
+  position: absolute;
+  bottom: 10%;
+  display: flex;
+  background: white;
+  border-radius: 15px;
+  padding: 10px 40px;
+  margin: auto;
+  left: 50%;
+  translate: -50% 0%;
+  font-size: 16px;
+  justify-content: space-between;
+  line-height: 0.8;
+  width: 70%;
+}
+.originalSize p:first-child {
+  font-size: 18px;
+  font-weight: 400;
+}
+.originalSize p:last-child {
+  font-size: 16px;
+  font-weight: 300;
+}
+.optimizeSize p:last-child {
+  font-size: 16px;
+  font-weight: 300;
+}
+.optimizeSize p:first-child {
+  font-size: 18px;
+  font-weight: 400;
 }
 
 .controls {

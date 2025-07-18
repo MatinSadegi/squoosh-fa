@@ -6,6 +6,7 @@
   height: 100%;
   overflow: hidden;
   contain: strict;
+  background-color: white;
 }
 
 .drop {

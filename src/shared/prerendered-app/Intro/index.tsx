@@ -10,11 +10,12 @@ import deviceScreen from 'url:./imgs/demos/demo-device-screen.png';
 import largePhotoIcon from 'url:./imgs/demos/icon-demo-large-photo.jpg';
 import artworkIcon from 'url:./imgs/demos/icon-demo-artwork.jpg';
 import deviceScreenIcon from 'url:./imgs/demos/icon-demo-device-screen.jpg';
-import smallSectionAsset from 'url:./imgs/info-content/small.svg';
-import simpleSectionAsset from 'url:./imgs/info-content/simple.svg';
-import secureSectionAsset from 'url:./imgs/info-content/secure.svg';
+import smallSectionAsset from 'url:./imgs/info-content/small2.png';
+import simpleSectionAsset from 'url:./imgs/info-content/easy.png';
+import secureSectionAsset from 'url:./imgs/info-content/secure.png';
+import logoWithText from 'url:./imgs/info-content/image.png';
 import logoIcon from 'url:./imgs/demos/icon-demo-logo.png';
-import logoWithText from 'data-url-text:./imgs/logo-with-text.svg';
+// import logoWithText from 'data-url-text:./imgs/image.png';
 import * as style from './style.css';
 import type SnackBarElement from 'shared/custom-els/snack-bar';
 import 'shared/custom-els/snack-bar';
@@ -240,15 +241,14 @@ export default class Intro extends Component<Props, State> {
               class={style.blobCanvas}
             />
           )}
-          <h1 class={style.logoContainer}>
-            <img
-              class={style.logo}
-              src={logoWithText}
-              alt="Squoosh"
-              width="539"
-              height="162"
-            />
-          </h1>
+          <h1 class={style.logoContainer}>بهینه‌ساز هوشمند تصاویر</h1>
+          {/* <img
+            class={style.logo}
+            src={logoWithText}
+            alt="Squoosh"
+            width="60"
+            height="60"
+          /> */}
           <div class={style.loadImg}>
             {showBlobSVG && (
               <svg
@@ -353,10 +353,12 @@ export default class Intro extends Component<Props, State> {
             <SlideOnScroll>
               <div class={style.infoContent}>
                 <div class={style.infoTextWrapper}>
-                  <h2 class={style.infoTitle}>کوچک</h2>
+                  <h2 class={style.infoTitle}>
+                    تصاویر سبک‌تر، وب‌سایت سریع‌تر
+                  </h2>
                   <p class={style.infoCaption}>
-                    تصاویر کوچکتر یعنی زمان بارگذاری سریع‌تر. Squoosh می‌تواند
-                    اندازه فایل را کاهش دهد و همچنان کیفیت بالا را حفظ کند.
+                    حجم عکس‌هایتان را بدون افت کیفیت محسوس کاهش دهید و سرعت
+                    بارگذاری را بالا ببرید.
                   </p>
                 </div>
                 <div class={style.infoImgWrapper}>
@@ -364,8 +366,8 @@ export default class Intro extends Component<Props, State> {
                     class={style.infoImg}
                     src={smallSectionAsset}
                     alt="silhouette of a large 1.4 megabyte image shrunk into a smaller 80 kilobyte image"
-                    width="536"
-                    height="522"
+                    width="300"
+                    height="300"
                   />
                 </div>
               </div>
@@ -378,11 +380,12 @@ export default class Intro extends Component<Props, State> {
             <SlideOnScroll>
               <div class={style.infoContent}>
                 <div class={style.infoTextWrapper}>
-                  <h2 class={style.infoTitle}>ساده</h2>
+                  <h2 class={style.infoTitle}>
+                    جادوی بهینه‌سازی را زنده ببینید!
+                  </h2>
                   <p class={style.infoCaption}>
-                    تصویرت را باز کن، تفاوت‌ها را بررسی کن، و فوراً ذخیره‌اش کن.
-                    حس ماجراجویی داری؟ تنظیمات را تغییر بده تا فایل‌ها حتی
-                    کوچک‌تر شوند.
+                    عکس خود را بکشید و رها کنید، با اسلایدر کیفیت را تنظیم کرده
+                    و نتیجه را فوراً دانلود کنید.
                   </p>
                 </div>
                 <div class={style.infoImgWrapper}>
@@ -404,11 +407,10 @@ export default class Intro extends Component<Props, State> {
             <SlideOnScroll>
               <div class={style.infoContent}>
                 <div class={style.infoTextWrapper}>
-                  <h2 class={style.infoTitle}>امن</h2>
+                  <h2 class={style.infoTitle}>حریم خصوصی، اولویت اصلی ماست</h2>
                   <p class={style.infoCaption}>
-                    نگران حریم خصوصی هستید؟ تصاویر هرگز از دستگاه شما خارج
-                    نمی‌شوند زیرا Squoosh تمام کارها را به صورت محلی انجام
-                    می‌دهد.
+                    تمام پردازش‌ها روی دستگاه شما انجام می‌شود و هیچ تصویری هرگز
+                    از کامپیوترتان خارج نخواهد شد.
                   </p>
                 </div>
                 <div class={style.infoImgWrapper}>
