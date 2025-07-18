@@ -212,9 +212,6 @@ export default class Options extends Component<Props, State> {
                   large
                   largeInput={true}
                 >
-                  <option value="identity">{`تصویر اصلی ${
-                    this.props.source ? `(${this.props.source.file.name})` : ''
-                  }`}</option>
                   {Object.entries(supportedEncoderMap).map(
                     ([type, encoder]) => (
                       <option value={type}>{encoder.meta.label}</option>
@@ -227,6 +224,18 @@ export default class Options extends Component<Props, State> {
                 </Select>
               )}
             </section>
+            <Expander>
+              {EncoderOptionComponent && (
+                <EncoderOptionComponent
+                  options={
+                    // Casting options, as encoderOptionsComponentMap[encodeData.type] ensures
+                    // the correct type, but typescript isn't smart enough.
+                    encoderState!.options as any
+                  }
+                  onChange={this.onEncoderOptionsChange}
+                />
+              )}
+            </Expander>
           </div>
         </div>
         {/* <Expander>
