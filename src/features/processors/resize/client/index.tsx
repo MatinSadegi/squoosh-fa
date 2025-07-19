@@ -225,8 +225,6 @@ export class Options extends Component<Props, State> {
   };
 
   render({ options, isVector }: Props, { maintainAspect }: State) {
-    console.log(options);
-
     return (
       <form
         ref={linkRef(this, 'form')}

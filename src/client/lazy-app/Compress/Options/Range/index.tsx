@@ -40,7 +40,6 @@ export default class Range extends Component<Props, State> {
     const { value, min, max, step } = props;
 
     const textValue = state.textFocused ? this.inputEl!.value : value;
-    console.log(value, min, max, step, textValue);
 
     return (
       <label class={style.range}>

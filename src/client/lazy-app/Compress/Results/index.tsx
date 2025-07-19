@@ -75,7 +75,6 @@ export default class Results extends Component<Props, State> {
     const isOriginal = !source || !imageFile || source.file === imageFile;
     let diff;
     let percent;
-    console.log(imageFile?.size, prettySize);
 
     if (source && imageFile) {
       diff = imageFile.size / source.file.size;

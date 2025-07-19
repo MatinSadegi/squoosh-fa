@@ -259,16 +259,14 @@ export default class Output extends Component<Props, State> {
     const originalImage = source && source.preprocessed;
 
     const originalSize = source && prettyBytes(source.file.size);
-    console.log('Original Size:', originalSize); // اضافه شده
+
     const originalUnit = originalSize
       ? unitMap[originalSize.unit] || originalSize.unit
       : '';
-    console.log(source?.file);
 
     const editedSize =
       editedFileSize !== undefined && prettyBytes(editedFileSize);
-    console.log('Edited Size:', editedSize); // اضافه شده
-    console.log('Edited Sizessssssssssssssssssss:', editedFileSize); // اضافه شده
+
     const editedUnit = editedSize
       ? unitMap[editedSize.unit] || editedSize.unit
       : '';
