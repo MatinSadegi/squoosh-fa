@@ -210,10 +210,14 @@ export default class Output extends Component<Props, State> {
    * @param event Event to redirect
    */
   private onRetargetableEvent = (event: Event) => {
+    if (event.type === 'wheel') {
+      event.stopPropagation();
+      return;
+    }
     const targetEl = event.target as HTMLElement;
     // If the event is on the handle of the two-up, let it through,
     // unless it's a wheel event, in which case always let it through.
-    if (event.type !== 'wheel' && targetEl.closest(`.${twoUpHandle}`)) return;
+    if (targetEl.closest(`.${twoUpHandle}`)) return;
     // If we've already retargeted this event, let it through.
     if (this.retargetedEvents.has(event)) return;
     // Stop the event in its tracks.
