@@ -67,24 +67,13 @@
     content: '';
     position: absolute;
     inset: 0;
-
-    /* عکس پس‌زمینه را از والد خود (که توسط JS تنظیم می‌شود) به ارث می‌برد */
-    background: inherit;
-    background-size: cover;
-    background-position: center;
-
-    /* افکت تاری روی این لایه اعمال می‌شود */
-    filter: blur(20px) brightness(1);
-
-    /* برای جلوگیری از دیده‌شدن لبه‌های تیز عکس تار شده */
-    transform: scale(1.2);
   }
 }
 
 .sizes {
   text-align: right;
   position: absolute;
-  bottom: 10%;
+  bottom: 7%;
   display: flex;
   background: white;
   border-radius: 15px;
@@ -96,6 +85,7 @@
   justify-content: space-between;
   line-height: 0.8;
   width: 70%;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
 .originalSize p:first-child {
   font-size: 18px;

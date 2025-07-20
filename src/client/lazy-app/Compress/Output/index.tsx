@@ -334,7 +334,7 @@ export default class Output extends Component<Props, State> {
                 />
               </div>
             </pinch-zoom>
-            <div className={style.cover} ref={linkRef(this, 'coverRef')}>
+            <div className={style.cover}>
               <div className={style.sizes}>
                 <div className={style.originalSize}>
                   <p>تصویر اصلی</p>
