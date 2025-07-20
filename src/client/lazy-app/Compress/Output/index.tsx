@@ -282,9 +282,7 @@ export default class Output extends Component<Props, State> {
             ref={linkRef(this, 'twoUpRef')}
             orientation={mobileView ? 'vertical' : 'horizontal'}
             // Event redirecting. See onRetargetableEvent.
-            onTouchStartCapture={this.onRetargetableEvent}
-            onTouchEndCapture={this.onRetargetableEvent}
-            onTouchMoveCapture={this.onRetargetableEvent}
+
             onPointerDownCapture={
               // We avoid pointer events in our PinchZoom due to a Safari bug.
               // That means we also need to avoid them here too, else we end up preventing the fallback mouse events.
