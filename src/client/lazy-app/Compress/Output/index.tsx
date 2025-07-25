@@ -114,12 +114,6 @@ export default class Output extends Component<Props, State> {
     if (this.twoUpRef) {
       this.twoUpRef.updateHandleSize();
     }
-    if (this.pinchZoomLeft) {
-      this.pinchZoomLeft.style.touchAction = 'pan-y';
-    }
-    if (this.pinchZoomRight) {
-      this.pinchZoomRight.style.touchAction = 'pan-y';
-    }
   }
 
   componentDidUpdate(prevProps: Props, prevState: State) {
@@ -228,7 +222,9 @@ export default class Output extends Component<Props, State> {
     if (this.retargetedEvents.has(event)) return;
     // Stop the event in its tracks.
     event.stopImmediatePropagation();
-    event.preventDefault();
+    if (event.type !== 'touchmove') {
+      event.preventDefault();
+    }
     // Clone the event & dispatch
     // Some TypeScript trickery needed due to https://github.com/Microsoft/TypeScript/issues/3841
     const clonedEvent = new (event.constructor as typeof Event)(
@@ -298,6 +294,9 @@ export default class Output extends Component<Props, State> {
             onWheelCapture={this.onRetargetableEvent}
           >
             <pinch-zoom
+              onTouchStart={() => console.log('touch start')}
+              onTouchMove={() => console.log('touch move')}
+              onTouchEnd={() => console.log('touch end')}
               class={style.pinchZoom}
               ref={linkRef(this, 'pinchZoomLeft')}
             >
