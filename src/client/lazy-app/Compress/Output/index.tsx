@@ -114,6 +114,12 @@ export default class Output extends Component<Props, State> {
     if (this.twoUpRef) {
       this.twoUpRef.updateHandleSize();
     }
+    if (this.pinchZoomLeft) {
+      this.pinchZoomLeft.style.touchAction = 'pan-y';
+    }
+    if (this.pinchZoomRight) {
+      this.pinchZoomRight.style.touchAction = 'pan-y';
+    }
   }
 
   componentDidUpdate(prevProps: Props, prevState: State) {
