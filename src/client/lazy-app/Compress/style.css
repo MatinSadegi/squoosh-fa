@@ -1,7 +1,6 @@
 .compress {
   width: 100%;
   height: 100%;
-  contain: strict;
   overflow-y: auto;
   display: block;
   grid-template-rows: max-content 1fr;

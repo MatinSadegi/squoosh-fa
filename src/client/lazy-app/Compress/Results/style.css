@@ -166,6 +166,11 @@
   color: var(--dim-text);
   padding: 0 10px;
   font-size: 20px;
+  padding-bottom: 50px;
+  margin-bottom: 50px;
+  @media (min-width: 600px) {
+    margin: 0;
+  }
 }
 
 .percent {
@@ -228,9 +233,11 @@
 
 .download {
   --size: 59px;
-  width: calc(var(--size) + var(--download-overflow-size));
+  position: fixed;
+  bottom: 30px;
+  z-index: 20;
+  width: 80%;
   height: calc(var(--size) + var(--download-overflow-size));
-  position: relative;
   grid-row: 1;
   grid-column: download;
   margin: calc(var(--download-overflow-size) / -2) 0;
@@ -242,6 +249,8 @@
 
   @media (min-width: 600px) {
     --size: 63px;
+    position: relative;
+    width: calc(var(--size) + var(--download-overflow-size));
   }
 
   loading-spinner {
@@ -316,7 +325,7 @@
   padding: 0px 23px;
   font-size: 20px;
   font-family: inherit;
-  margin: 90px 0px;
+  margin: 0px;
   cursor: pointer;
 }
 
