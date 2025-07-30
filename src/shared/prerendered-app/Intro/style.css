@@ -4,8 +4,9 @@
   overflow: auto;
   overscroll-behavior: contain;
   display: grid;
-  grid-template-rows: max-content max-content max-content;
-  font-size: 1.2rem;
+  /* ساختار اصلی صفحه برای چیدمان بخش‌ها */
+  grid-template-rows: max-content auto 1fr;
+  font-size: 1.2rem; /* استفاده از rem برای مقیاس‌پذیری بهتر */
   color: var(--dim-text);
   direction: rtl;
 }
@@ -21,60 +22,71 @@
   display: flex;
   margin: auto;
   justify-content: center;
+  align-items: center; /* محتوا را در مرکز قرار می‌دهد */
   position: relative;
-
-  @media (min-width: 600px) {
-    /* min-height: 688px; */
-  }
+  width: 90%;
+  padding: 0 1rem; /* کمی فاصله از اطراف در موبایل */
 }
 
 .logo-container {
   text-align: center;
-  margin-top: 60px;
+  margin-top: 40px;
 }
 
+/* --- بخش آپلود --- */
 .uploadBox {
-  max-width: 90vw; /* Make it responsive on smaller screens */
-  height: 200px;
+  width: 100%;
+  max-width: 90vw;
+  min-height: 220px; /* حداقل ارتفاع برای محتوای داخل */
+  height: auto;
   cursor: pointer;
   border: 2px dashed grey;
   border-radius: 12px;
   display: flex;
   flex-direction: column;
-  padding: 25px 0px;
-  gap: 10px;
+  padding: 30px 20px;
+  gap: 15px;
   justify-content: center;
   align-items: center;
   margin-top: 2rem;
-
-  @media (min-width: 600px) {
-    width: 75vw;
-  }
+  box-sizing: border-box; /* برای محاسبه صحیح padding */
 }
 
 .selectFileBtn {
   composes: unbutton from global;
   background-color: var(--deep-blue);
   color: white;
-  padding: 1.8rem 8rem;
-  font-size: 2rem;
-  font-family: inherit; /* Ensure correct font is used */
+  font-family: inherit;
   font-weight: bold;
   border-radius: 8px;
+  padding: 1.8rem 4rem;
+  font-size: 1.8rem;
   transition: transform 0.2s ease, background-color 0.2s ease;
+}
 
-  &:hover {
-    transform: scale(1.01);
-    background-color: var(--dim-blue);
+@media (min-width: 600px) {
+  .main {
+    width: 80%;
   }
+  .selectFileBtn {
+    padding: 1.8rem 8rem;
+    font-size: 2rem;
+  }
+}
+
+.selectFileBtn:hover {
+  transform: scale(1.02);
+  background-color: var(--dim-blue);
 }
 
 .dragDropSpan {
   color: grey;
+  text-align: center;
 }
 
 .secureSpan {
   color: grey;
+  font-size: 1.2rem;
 }
 
 .secureDiv {
@@ -83,56 +95,115 @@
   gap: 5px;
 }
 
+/* --- بخش ویژگی‌ها (Info) --- */
 .info-section {
-  margin: auto;
-  margin-top: 100px;
-  grid-template-columns: 1fr 1fr 1fr;
-  column-gap: 50px;
-  row-gap: 20px;
-  width: 75vw;
+  width: 90vw;
+  max-width: 1200px; /* حداکثر عرض در دسکتاپ */
+  margin: 80px auto;
   display: grid;
+  /* Mobile-first: تک ستونی در موبایل */
+  grid-template-columns: 1fr;
+  gap: 50px;
+}
+
+/* Tablet: دو ستونی */
+@media (min-width: 600px) {
+  .info-section {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* Desktop: سه ستونی */
+@media (min-width: 1024px) {
+  .info-section {
+    grid-template-columns: 1fr 1fr 1fr;
+    width: 80vw;
+  }
 }
 
 .info {
   text-align: center;
 }
+.info img {
+}
 
 .info-title {
-  margin: 0px;
-  padding: 6px 0px;
-  font-size: 30px;
+  margin: 10px 0;
+  font-size: 2.3rem;
   font-weight: 500;
 }
 
 .info-content {
-  font-size: 15px;
+  font-size: 1rem;
+  line-height: 1.6;
 }
 
+/* --- بخش آموزش (Question) --- */
 .questionSection {
   display: flex;
-  border: 1px solid grey;
-  width: 80vw;
-  margin: auto;
-  margin-top: 100px;
+  /* Mobile-first: چیدمان عمودی */
+  flex-direction: column-reverse;
+  border: 1px solid #e0e0e0;
+  width: 90vw;
+  max-width: 1200px;
+  margin: 80px auto;
   border-radius: 10px;
-  padding: 60px 0px;
+  padding: 30px;
   justify-content: center;
-  gap: 150px;
   align-items: center;
+  gap: 40px;
+  box-sizing: border-box;
 }
 
+.questionSection > div {
+  /* flex: 1; هر دو فرزند عرض یکسانی بگیرند */
+}
+
+.questionSection h2 {
+  font-size: 1.8rem;
+}
+
+.questionSection p {
+  line-height: 1.8;
+}
+
+.questionSection img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Desktop: چیدمان افقی */
+@media (min-width: 900px) {
+  .questionSection {
+    flex-direction: row;
+    width: 80vw;
+    gap: 100px;
+    padding: 60px 40px;
+  }
+}
+
+/* --- بخش سوالات متداول (FAQ) --- */
 .faqSection {
-  width: 75vw;
-  margin: 100px auto;
+  width: 90vw;
+  max-width: 900px; /* حداکثر عرض در دسکتاپ */
+  margin: 80px auto;
   display: flex;
   flex-direction: column;
   gap: 15px;
 }
 
 .faqHeader {
-  font-size: 2.5rem;
+  text-align: center;
+  font-size: 2.2rem;
   color: var(--off-black);
   margin-bottom: 30px;
+}
+
+@media (min-width: 768px) {
+  .faqHeader {
+    font-size: 2.6rem;
+  }
 }
 
 .faqItem {
@@ -147,13 +218,19 @@
   align-items: center;
   text-align: right;
   padding: 20px 0;
-  font-size: 1.5rem;
+  font-size: 1.4rem;
   font-weight: 500;
   color: var(--off-black);
 }
 
+@media (min-width: 768px) {
+  .faqQuestion {
+    font-size: 1.5rem;
+  }
+}
+
 .faqIcon {
-  font-size: 2rem;
+  font-size: 1.8rem;
   font-weight: lighter;
   transition: transform 0.3s ease;
 }
@@ -171,21 +248,22 @@
 }
 
 .faqAnswerOpen {
-  max-height: 300px; /* ارتفاع کافی برای نمایش جواب */
+  max-height: 300px;
   opacity: 1;
   padding-bottom: 20px;
 }
 
 .faqAnswer p {
-  font-size: 1.1rem;
+  font-size: 1.2rem;
   line-height: 1.8;
   color: var(--dim-text);
 }
 
-/* بخش فوتر */
+/* --- بخش فوتر --- */
 .footer {
   background: var(--white);
   padding-top: 5em;
+  margin-top: 50px;
 }
 
 .footer-container {
@@ -213,8 +291,10 @@
   grid-auto-rows: max-content;
   justify-items: center;
   gap: 2rem;
+}
 
-  @media (min-width: 480px) {
+@media (min-width: 480px) {
+  .footer-items {
     justify-content: end;
     grid-auto-flow: column;
     align-items: center;
