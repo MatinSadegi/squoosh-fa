@@ -2,73 +2,49 @@ import { h, Component } from 'preact';
 
 import { linkRef } from 'shared/prerendered-app/util';
 import '../../custom-els/loading-spinner';
-import logo from 'url:./imgs/logo.svg';
-import githubLogo from 'url:./imgs/github-logo.svg';
-import largePhoto from 'url:./imgs/demos/demo-large-photo.jpg';
-import artwork from 'url:./imgs/demos/demo-artwork.jpg';
-import deviceScreen from 'url:./imgs/demos/demo-device-screen.png';
-import largePhotoIcon from 'url:./imgs/demos/icon-demo-large-photo.jpg';
-import artworkIcon from 'url:./imgs/demos/icon-demo-artwork.jpg';
-import deviceScreenIcon from 'url:./imgs/demos/icon-demo-device-screen.jpg';
-import smallSectionAsset from 'url:./imgs/info-content/small2.png';
-import simpleSectionAsset from 'url:./imgs/info-content/easy.png';
-import secureSectionAsset from 'url:./imgs/info-content/secure.png';
-import logoWithText from 'url:./imgs/info-content/image.png';
-import logoIcon from 'url:./imgs/demos/icon-demo-logo.png';
+
+import infinity from 'url:./imgs/info-content/infinity-svgrepo-com.svg';
+import secure from 'url:./imgs/info-content/secure-shield-password-protect-safe-svgrepo-com.svg';
+import thunder from 'url:./imgs/info-content/thunder-bolt-hand-drawn-shape-outline-svgrepo-com.svg';
+import security from 'url:./imgs/info-content/security-svgrepo-com.svg';
+import quality from 'url:./imgs/info-content/star-emphasis-svgrepo-com.svg';
+import tool from 'url:./imgs/info-content/tool-01-svgrepo-com.svg';
+import users from 'url:./imgs/info-content/users-svgrepo-com.svg';
+import checkedImage from 'url:./imgs/info-content/image-square-check-svgrepo-com.svg';
 // import logoWithText from 'data-url-text:./imgs/image.png';
 import * as style from './style.css';
 import type SnackBarElement from 'shared/custom-els/snack-bar';
 import 'shared/custom-els/snack-bar';
-import { startBlobs } from './blob-anim/meta';
-import SlideOnScroll from './SlideOnScroll';
 
-const demos = [
-  {
-    description: 'Large photo',
-    size: '2.8MB',
-    filename: 'photo.jpg',
-    url: largePhoto,
-    iconUrl: largePhotoIcon,
-  },
-  {
-    description: 'Artwork',
-    size: '2.9MB',
-    filename: 'art.jpg',
-    url: artwork,
-    iconUrl: artworkIcon,
-  },
-  {
-    description: 'Device screen',
-    size: '1.6MB',
-    filename: 'pixel3.png',
-    url: deviceScreen,
-    iconUrl: deviceScreenIcon,
-  },
-  {
-    description: 'SVG icon',
-    size: '13KB',
-    filename: 'squoosh.svg',
-    url: logo,
-    iconUrl: logoIcon,
-  },
-] as const;
-
-const blobAnimImport =
-  !__PRERENDER__ && matchMedia('(prefers-reduced-motion: reduce)').matches
-    ? undefined
-    : import('./blob-anim');
 const installButtonSource = 'introInstallButton-Purple';
-const supportsClipboardAPI =
-  !__PRERENDER__ && navigator.clipboard && navigator.clipboard.read;
 
-async function getImageClipboardItem(
-  items: ClipboardItem[],
-): Promise<undefined | Blob> {
-  for (const item of items) {
-    const type = item.types.find((type) => type.startsWith('image/'));
-    if (type) return item.getType(type);
-  }
-}
+const faqs = [
+  {
+    question: 'چگونه می‌توانم حجم تصویر را کاهش دهم؟',
+    answer:
+      'کافیست تصویر یا تصاویر خود را در کادر آپلود، انتخاب یا رها کنید. ابزار ما به طور خودکار بهترین فشرده‌سازی را برای کاهش حجم بدون افت کیفیت محسوس اعمال می‌کند.',
+  },
+  {
+    question: 'آیا استفاده از این ابزار رایگان است؟',
+    answer:
+      'بله، استفاده از این فشرده‌ساز تصویر کاملاً رایگان است. شما می‌توانید به تعداد نامحدود و بدون هیچ هزینه‌ای تصاویر خود را بهینه کنید.',
+  },
+  {
+    question: 'آیا فایل‌های من پس از آپلود امن هستند؟',
+    answer:
+      'قطعاً. تمام پردازش‌ها مستقیماً روی مرورگر و دستگاه شما انجام می‌شود. هیچ فایلی به سرورهای ما ارسال نمی‌شود و حریم خصوصی شما ۱۰۰٪ حفظ می‌گردد.',
+  },
+  {
+    question: 'چه فرمت‌های تصویری پشتیبانی می‌شوند؟',
+    answer:
+      'این ابزار از محبوب‌ترین فرمت‌های تصویر مانند JPEG، PNG، WEBP و SVG پشتیبانی می‌کند. شما می‌توانید هر یک از این فرمت‌ها را برای بهینه‌سازی آپلود کنید.',
+  },
+  {
+    question: 'آیا کیفیت تصویر پس از فشرده‌سازی کاهش می‌یابد؟',
+    answer:
+      'هدف اصلی ما، کاهش حجم با حفظ حداکثری کیفیت است. الگوریتم‌های ما به گونه‌ای طراحی شده‌اند که افت کیفیت با چشم غیرمسلح قابل تشخیص نباشد.',
+  },
+];
 
 interface Props {
   onFile?: (file: File) => void;
@@ -77,15 +53,14 @@ interface Props {
 interface State {
   fetchingDemoIndex?: number;
   beforeInstallEvent?: BeforeInstallPromptEvent;
-  showBlobSVG: boolean;
+  openFaqIndex: number | null;
 }
 
 export default class Intro extends Component<Props, State> {
   state: State = {
-    showBlobSVG: true,
+    openFaqIndex: null,
   };
   private fileInput?: HTMLInputElement;
-  private blobCanvas?: HTMLCanvasElement;
   private installingViaButton = false;
 
   componentDidMount() {
@@ -97,17 +72,6 @@ export default class Intro extends Component<Props, State> {
 
     // Listen for the appinstalled event, indicating Squoosh has been installed.
     window.addEventListener('appinstalled', this.onAppInstalled);
-
-    if (blobAnimImport) {
-      blobAnimImport.then((module) => {
-        this.setState(
-          {
-            showBlobSVG: false,
-          },
-          () => module.startBlobAnim(this.blobCanvas!),
-        );
-      });
-    }
   }
 
   componentWillUnmount() {
@@ -130,17 +94,10 @@ export default class Intro extends Component<Props, State> {
     this.fileInput!.click();
   };
 
-  private onDemoClick = async (index: number, event: Event) => {
-    try {
-      this.setState({ fetchingDemoIndex: index });
-      const demo = demos[index];
-      const blob = await fetch(demo.url).then((r) => r.blob());
-      const file = new File([blob], demo.filename, { type: blob.type });
-      this.props.onFile!(file);
-    } catch (err) {
-      this.setState({ fetchingDemoIndex: undefined });
-      this.props.showSnack!("Couldn't fetch demo image");
-    }
+  private toggleFaq = (index: number) => {
+    this.setState({
+      openFaqIndex: this.state.openFaqIndex === index ? null : index,
+    });
   };
 
   private onBeforeInstallPromptEvent = (event: BeforeInstallPromptEvent) => {
@@ -159,34 +116,6 @@ export default class Intro extends Component<Props, State> {
     ga('send', 'event', gaEventInfo);
   };
 
-  private onInstallClick = async (event: Event) => {
-    // Get the deferred beforeinstallprompt event
-    const beforeInstallEvent = this.state.beforeInstallEvent;
-    // If there's no deferred prompt, bail.
-    if (!beforeInstallEvent) return;
-
-    this.installingViaButton = true;
-
-    // Show the browser install prompt
-    beforeInstallEvent.prompt();
-
-    // Wait for the user to accept or dismiss the install prompt
-    const { outcome } = await beforeInstallEvent.userChoice;
-    // Send the analytics data
-    const gaEventInfo = {
-      eventCategory: 'pwa-install',
-      eventAction: 'promo-clicked',
-      eventLabel: installButtonSource,
-      eventValue: outcome === 'accepted' ? 1 : 0,
-    };
-    ga('send', 'event', gaEventInfo);
-
-    // If the prompt was dismissed, we aren't going to install via the button.
-    if (outcome === 'dismissed') {
-      this.installingViaButton = false;
-    }
-  };
-
   private onAppInstalled = () => {
     // We don't need the install button, if it's shown
     this.setState({ beforeInstallEvent: undefined });
@@ -202,30 +131,7 @@ export default class Intro extends Component<Props, State> {
     this.installingViaButton = false;
   };
 
-  private onPasteClick = async () => {
-    let clipboardItems: ClipboardItem[];
-
-    try {
-      clipboardItems = await navigator.clipboard.read();
-    } catch (err) {
-      this.props.showSnack!(`No permission to access clipboard`);
-      return;
-    }
-
-    const blob = await getImageClipboardItem(clipboardItems);
-
-    if (!blob) {
-      this.props.showSnack!(`No image found in the clipboard`);
-      return;
-    }
-
-    this.props.onFile!(new File([blob], 'image.unknown'));
-  };
-
-  render(
-    {}: Props,
-    { fetchingDemoIndex, beforeInstallEvent, showBlobSVG }: State,
-  ) {
+  render({}: Props, { fetchingDemoIndex, openFaqIndex }: State) {
     return (
       <div class={style.intro}>
         <input
@@ -234,197 +140,147 @@ export default class Intro extends Component<Props, State> {
           type="file"
           onChange={this.onFileChange}
         />
+
         <div class={style.main}>
-          {!__PRERENDER__ && (
-            <canvas
-              ref={linkRef(this, 'blobCanvas')}
-              class={style.blobCanvas}
-            />
-          )}
           <h1 class={style.logoContainer}>بهینه‌ساز هوشمند تصاویر</h1>
-          {/* <img
-            class={style.logo}
-            src={logoWithText}
-            alt="Squoosh"
-            width="60"
-            height="60"
-          /> */}
-          <div class={style.loadImg}>
-            {showBlobSVG && (
-              <svg
-                class={style.blobSvg}
-                viewBox="-1.25 -1.25 2.5 2.5"
-                preserveAspectRatio="xMidYMid slice"
-              >
-                {startBlobs.map((points) => (
-                  <path
-                    d={points
-                      .map((point, i) => {
-                        const nextI = i === points.length - 1 ? 0 : i + 1;
-                        let d = '';
-                        if (i === 0) {
-                          d += `M${point[2]} ${point[3]}`;
-                        }
-                        return (
-                          d +
-                          `C${point[4]} ${point[5]} ${points[nextI][0]} ${points[nextI][1]} ${points[nextI][2]} ${points[nextI][3]}`
-                        );
-                      })
-                      .join('')}
-                  />
-                ))}
-              </svg>
-            )}
-            <div
-              class={style.loadImgContent}
-              style={{ visibility: __PRERENDER__ ? 'hidden' : '' }}
-            >
-              <button class={style.loadBtn} onClick={this.onOpenClick}>
-                <svg viewBox="0 0 24 24" class={style.loadIcon}>
-                  <path d="M19 7v3h-2V7h-3V5h3V2h2v3h3v2h-3zm-3 4V8h-3V5H5a2 2 0 00-2 2v12c0 1.1.9 2 2 2h12a2 2 0 002-2v-8h-3zM5 19l3-4 2 3 3-4 4 5H5z" />
-                </svg>
-              </button>
-              <div>
-                <span class={style.dropText}>فایل را رها کنید یا </span>
-                {supportsClipboardAPI ? (
-                  <button class={style.pasteBtn} onClick={this.onPasteClick}>
-                    بچسبانید
-                  </button>
-                ) : (
-                  'بچسبانید'
-                )}
-              </div>
+          {/* This is the new upload section.
+            The old blob SVG and canvas have been removed. 
+          */}
+          <div onClick={this.onOpenClick} class={style.uploadBox}>
+            <p class={style.dragDropSpan}>
+              برای شروع بهینه سازی عکس خود را اینجا رها کنید
+            </p>
+            <button class={style.selectFileBtn}>انتخاب فایل</button>
+            <div class={style.secureDiv}>
+              <p class={style.secureSpan}>فایل‌های شما امن هستند </p>
+              <img
+                src={secure}
+                alt="silhouette of a cloud with a 'no' symbol on top"
+              />
             </div>
           </div>
         </div>
-        <div class={style.demosContainer}>
-          <svg viewBox="0 0 1920 140" class={style.topWave}>
-            <path
-              d="M1920 0l-107 28c-106 29-320 85-533 93-213 7-427-36-640-50s-427 0-533 7L0 85v171h1920z"
-              class={style.subWave}
+        <section class={style.infoSection}>
+          <div class={style.info}>
+            <img
+              src={infinity}
+              alt="silhouette of a cloud with a 'no' symbol on top"
             />
-            <path
-              d="M0 129l64-26c64-27 192-81 320-75 128 5 256 69 384 64 128-6 256-80 384-91s256 43 384 70c128 26 256 26 320 26h64v96H0z"
-              class={style.mainWave}
-            />
-          </svg>
-          <div class={style.contentPadding}>
-            <p class={style.demoTitle}>یا یکی از اینها را امتحان کنید </p>
-            <ul class={style.demos}>
-              {demos.map((demo, i) => (
-                <li>
-                  <button
-                    class="unbutton"
-                    onClick={(event) => this.onDemoClick(i, event)}
-                  >
-                    <div class={style.demoContainer}>
-                      <div class={style.demoIconContainer}>
-                        <img
-                          class={style.demoIcon}
-                          src={demo.iconUrl}
-                          alt={demo.description}
-                        />
-                        {fetchingDemoIndex === i && (
-                          <div class={style.demoLoader}>
-                            <loading-spinner />
-                          </div>
-                        )}
-                      </div>
-                      <div class={style.demoSize}>{demo.size}</div>
-                    </div>
-                  </button>
-                </li>
-              ))}
-            </ul>
+            <p class={style.infoTitle}>نامحدود</p>
+            <p class={style.infoContent}>
+              این فشرده‌ساز تصویر رایگان است و به شما امکان می‌دهد به تعداد
+              نامحدود از آن استفاده کنید و حجم تصویر را به صورت آنلاین فشرده
+              کنید.
+            </p>
           </div>
-        </div>
-
-        <div class={style.bottomWave}>
-          <svg viewBox="0 0 1920 79" class={style.topWave}>
-            <path
-              d="M0 59l64-11c64-11 192-34 320-43s256-5 384 4 256 23 384 34 256 21 384 14 256-30 320-41l64-11v94H0z"
-              class={style.infoWave}
+          <div class={style.info}>
+            <img
+              src={thunder}
+              alt="silhouette of a cloud with a 'no' symbol on top"
             />
-          </svg>
-        </div>
-
-        <section class={style.info}>
-          <div class={style.infoContainer}>
-            <SlideOnScroll>
-              <div class={style.infoContent}>
-                <div class={style.infoTextWrapper}>
-                  <h2 class={style.infoTitle}>
-                    تصاویر سبک‌تر، وب‌سایت سریع‌تر
-                  </h2>
-                  <p class={style.infoCaption}>
-                    حجم عکس‌هایتان را بدون افت کیفیت محسوس کاهش دهید و سرعت
-                    بارگذاری را بالا ببرید.
-                  </p>
-                </div>
-                <div class={style.infoImgWrapper}>
-                  <img
-                    class={style.infoImg}
-                    src={smallSectionAsset}
-                    alt="silhouette of a large 1.4 megabyte image shrunk into a smaller 80 kilobyte image"
-                    width="300"
-                    height="300"
-                  />
-                </div>
-              </div>
-            </SlideOnScroll>
+            <p class={style.infoTitle}>فشرده‌سازی سریع</p>
+            <p class={style.infoContent}>
+              پردازش فشرده‌سازی آن قدرتمند است. بنابراین، فشرده‌سازی تمام تصاویر
+              انتخاب‌شده زمان کمتری می‌برد.{' '}
+            </p>
+          </div>
+          <div class={style.info}>
+            <img
+              src={security}
+              alt="silhouette of a cloud with a 'no' symbol on top"
+            />
+            <p class={style.infoTitle}>امنیت</p>
+            <p class={style.infoContent}>
+              {' '}
+              تمام پردازش‌ها روی دستگاه شما انجام می‌شود و هیچ تصویری هرگز از
+              کامپیوترتان خارج نخواهد شد.
+            </p>
+          </div>
+          <div class={style.info}>
+            <img
+              src={quality}
+              alt="silhouette of a cloud with a 'no' symbol on top"
+            />
+            <p class={style.infoTitle}>کیفیت</p>
+            <p class={style.infoContent}>
+              حجم عکس‌هایتان را بدون افت کیفیت محسوس کاهش دهید و سرعت بارگذاری
+              را بالا ببرید.{' '}
+            </p>
+          </div>
+          <div class={style.info}>
+            <img
+              src={tool}
+              alt="silhouette of a cloud with a 'no' symbol on top"
+            />
+            <p class={style.infoTitle}>ابزار قدرتمند</p>
+            <p class={style.infoContent}>
+              شما می‌توانید با استفاده از هر مرورگری از هر سیستم عاملی، به صورت
+              آنلاین به فشرده‌ساز تصویر در اینترنت دسترسی داشته باشید یا از آن
+              استفاده کنید.{' '}
+            </p>
+          </div>
+          <div class={style.info}>
+            <img
+              src={users}
+              alt="silhouette of a cloud with a 'no' symbol on top"
+            />
+            <p class={style.infoTitle}>کاربرپسند</p>
+            <p class={style.infoContent}>
+              این ابزار برای همه کاربران طراحی شده است، دانش پیشرفته‌ای لازم
+              نیست. بنابراین، فشرده‌سازی حجم تصویر آسان است.
+            </p>
           </div>
         </section>
-
-        <section class={style.info}>
-          <div class={style.infoContainer}>
-            <SlideOnScroll>
-              <div class={style.infoContent}>
-                <div class={style.infoTextWrapper}>
-                  <h2 class={style.infoTitle}>
-                    جادوی بهینه‌سازی را زنده ببینید!
-                  </h2>
-                  <p class={style.infoCaption}>
-                    عکس خود را بکشید و رها کنید، با اسلایدر کیفیت را تنظیم کرده
-                    و نتیجه را فوراً دانلود کنید.
-                  </p>
-                </div>
-                <div class={style.infoImgWrapper}>
-                  <img
-                    class={style.infoImg}
-                    src={simpleSectionAsset}
-                    alt="grid of multiple shrunk images displaying various options"
-                    width="538"
-                    height="384"
-                  />
-                </div>
-              </div>
-            </SlideOnScroll>
+        <section class={style.questionSection}>
+          <div>
+            <h2>چگونه تصویر را به صورت آنلاین فشرده کنیم؟</h2>
+            <p>1. تصویری را که می‌خواهید فشرده کنید، انتخاب کنید.</p>
+            <p>
+              2. پیش‌نمایش تمام تصاویر انتخاب شده را در Image Compressor مشاهده
+              کنید
+            </p>
+            <p>
+              3. می‌توانید اندازه تصویر را با استفاده از اسلایدر متناسب تنظیم
+              کنید.
+            </p>
+            <p>4. همچنین، می‌توانید تصاویر را از لیست اضافه یا حذف کنید.</p>
+            <p>
+              5. در نهایت، تصاویر فشرده شده را از Image Compressor دانلود کنید.
+            </p>
+          </div>
+          <div>
+            <img
+              src={checkedImage}
+              alt="silhouette of a cloud with a 'no' symbol on top"
+            />
           </div>
         </section>
-
-        <section class={style.info}>
-          <div class={style.infoContainer}>
-            <SlideOnScroll>
-              <div class={style.infoContent}>
-                <div class={style.infoTextWrapper}>
-                  <h2 class={style.infoTitle}>حریم خصوصی، اولویت اصلی ماست</h2>
-                  <p class={style.infoCaption}>
-                    تمام پردازش‌ها روی دستگاه شما انجام می‌شود و هیچ تصویری هرگز
-                    از کامپیوترتان خارج نخواهد شد.
-                  </p>
-                </div>
-                <div class={style.infoImgWrapper}>
-                  <img
-                    class={style.infoImg}
-                    src={secureSectionAsset}
-                    alt="silhouette of a cloud with a 'no' symbol on top"
-                    width="498"
-                    height="333"
-                  />
-                </div>
+        <section class={style.faqSection}>
+          <h2 class={style.faqHeader}>سوالات متداول</h2>
+          {faqs.map((faq, index) => (
+            <div class={style.faqItem}>
+              <button
+                class={style.faqQuestion}
+                onClick={() => this.toggleFaq(index)}
+              >
+                <span>{faq.question}</span>
+                <span
+                  class={`${style.faqIcon} ${
+                    openFaqIndex === index ? style.faqIconOpen : ''
+                  }`}
+                >
+                  +
+                </span>
+              </button>
+              <div
+                class={`${style.faqAnswer} ${
+                  openFaqIndex === index ? style.faqAnswerOpen : ''
+                }`}
+              >
+                <p>{faq.answer}</p>
               </div>
-            </SlideOnScroll>
-          </div>
+            </div>
+          ))}
         </section>
 
         <footer class={style.footer}>
