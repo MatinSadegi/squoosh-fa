@@ -52,10 +52,16 @@
   /* Prevent the image becoming misshapen due to default flexbox layout. */
   flex-shrink: 0;
   border-radius: 20px;
-  @media (min-height: 720px) {
+}
+
+@media (min-height: 720px) and (min-width: 600px) {
+  .pinch-target {
     max-height: 450px;
   }
-  @media (min-height: 800px) {
+}
+
+@media (min-height: 800px) and (min-width: 600px) {
+  .pinch-target {
     max-height: 500px;
   }
 }
