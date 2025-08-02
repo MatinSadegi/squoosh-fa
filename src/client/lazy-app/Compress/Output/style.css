@@ -47,11 +47,17 @@
 .pinch-target {
   width: 100% !important;
   height: auto !important;
-  max-height: 500px;
+  max-height: 400px;
   object-fit: contain;
   /* Prevent the image becoming misshapen due to default flexbox layout. */
   flex-shrink: 0;
   border-radius: 20px;
+  @media (min-height: 720px) {
+    max-height: 450px;
+  }
+  @media (min-height: 800px) {
+    max-height: 500px;
+  }
 }
 
 .canvas-parent {
