@@ -337,30 +337,29 @@ export default class Output extends Component<Props, State> {
                 />
               </div>
             </pinch-zoom>
-            <div className={style.cover}>
-              <div className={style.sizes}>
-                <div className={style.originalSize}>
-                  <p>تصویر اصلی</p>
-                  {/* **اصلاح شده:** نمایش حجم اصلی به صورت داینامیک */}
-                  {originalSize ? (
-                    <p>
-                      حجم: {originalSize.value} {originalUnit}
-                    </p>
-                  ) : (
-                    <p>حجم: درحال پردازش</p>
-                  )}
-                </div>
-                <div className={style.optimizeSize}>
-                  <p>تصویر بهینه‌شده</p>
-                  {/* **اصلاح شده:** نمایش حجم ویرایش شده به صورت داینامیک */}
-                  {editedSize ? (
-                    <p>
-                      حجم: {editedSize.value} {editedUnit}
-                    </p>
-                  ) : (
-                    <p>حجم: درحال پردازش</p>
-                  )}
-                </div>
+
+            <div className={style.sizes}>
+              <div className={style.originalSize}>
+                <p>تصویر اصلی</p>
+                {/* **اصلاح شده:** نمایش حجم اصلی به صورت داینامیک */}
+                {originalSize ? (
+                  <p>
+                    حجم: {originalSize.value} {originalUnit}
+                  </p>
+                ) : (
+                  <p>حجم: درحال پردازش</p>
+                )}
+              </div>
+              <div className={style.optimizeSize}>
+                <p>تصویر بهینه‌شده</p>
+                {/* **اصلاح شده:** نمایش حجم ویرایش شده به صورت داینامیک */}
+                {editedSize ? (
+                  <p>
+                    حجم: {editedSize.value} {editedUnit}
+                  </p>
+                ) : (
+                  <p>حجم: درحال پردازش</p>
+                )}
               </div>
             </div>
           </two-up>

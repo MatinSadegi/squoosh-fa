@@ -20,7 +20,7 @@
 .two-up {
   composes: abs-fill from global;
   width: 100%;
-  height: 100vh;
+  height: 100%;
   border-radius: 20px;
   position: static;
   touch-action: pan-y;
@@ -70,18 +70,6 @@
 .canvas-parent {
   width: 90%;
   height: 90%;
-}
-
-.cover {
-  width: 100%;
-  height: 100%;
-  z-index: -1;
-  border-radius: 20px;
-  &::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-  }
 }
 
 .sizes {
